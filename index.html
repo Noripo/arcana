@@ -1324,10 +1324,9 @@ body::before{content:'';position:fixed;inset:0;background:
             </div>
             <div class="fg"><label class="fl">報告書の種類</label>
               <select class="fs" id="aiType" onchange="toggleAuditForm()">
-                <option value="定期巡回報告書（1号ロ）">定期巡回報告書（1号ロ）</option>
-                <option value="定期巡回報告書（2号ロ）">定期巡回報告書（2号ロ）</option>
+                <option value="巡回報告書">巡回報告書</option>
                 <option value="定期監査報告書">定期監査報告書</option>
-                <option value="臨時巡回報告書">臨時巡回報告書</option>
+                <option value="臨時監査報告書">臨時監査報告書</option>
               </select>
             </div>
           </div>
@@ -1432,9 +1431,16 @@ body::before{content:'';position:fixed;inset:0;background:
       </div>
       <div class="panel" id="reportOut" style="display:none">
         <div class="panel-head"><span class="panel-title">📄 生成された報告書</span>
-          <div class="flex gap4"><button class="btn btn-ghost btn-sm" onclick="copyReport()">📋 コピー</button><button class="btn btn-success btn-sm" onclick="downloadReportPDF()">💾 PDF保存</button></div>
+          <div class="flex gap4">
+            <button class="btn btn-ghost btn-sm" onclick="copyReport()">📋 コピー</button>
+            <button class="btn btn-success btn-sm" onclick="downloadReportPDF()">💾 PDF保存</button>
+            <button class="btn btn-primary btn-sm" onclick="saveReport()">💾 実施者に保存</button>
+          </div>
         </div>
-        <div class="panel-body"><div id="reportContent" style="font-size:.72rem;line-height:1.9;white-space:pre-wrap;font-family:var(--mono);color:var(--text-dim)"></div></div>
+        <div class="panel-body">
+          <div class="alert a-teal mb8" style="font-size:.7rem"><span class="alert-icon">✏️</span><span>報告書は直接編集できます。編集後「実施者に保存」で保存されます。</span></div>
+          <textarea id="reportContent" style="width:100%;min-height:400px;font-size:.72rem;line-height:1.9;font-family:var(--mono);color:var(--text-dim);border:1px solid var(--border);border-radius:6px;padding:10px;background:var(--surface);resize:vertical"></textarea>
+        </div>
       </div>
     </div>
   </div>
@@ -1558,6 +1564,7 @@ body::before{content:'';position:fixed;inset:0;background:
         <button class="inner-tab" onclick="switchTab('mco','mco-staff',this)">担当者</button>
         <button class="inner-tab" onclick="switchTab('mco','mco-other',this)">他組合情報</button>
         <button class="inner-tab" onclick="switchTab('mco','mco-docs',this);initCoDocTab()">📁 書類閲覧</button>
+        <button class="inner-tab" onclick="switchTab('mco','mco-reports',this);renderCoReports()">📝 巡回・監査報告書</button>
       </div>
       <div id="mco-basic" class="inner-content active">
         <div class="g2"><div class="fg"><label class="fl">会社名（正式）</label><input class="fi"></div><div class="fg"><label class="fl">会社名（略称）</label><input class="fi"></div></div>
@@ -1596,6 +1603,16 @@ body::before{content:'';position:fixed;inset:0;background:
         <div class="fg"><label class="fl">備考</label><textarea class="fta" style="min-height:50px"></textarea></div>
       </div>
       <!-- 書類閲覧タブ -->
+      <div id="mco-reports" class="inner-content">
+        <div class="panel-head" style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+          <span class="panel-title">📝 巡回・監査報告書</span>
+          <button class="btn btn-primary btn-sm" onclick="showPage('ai')">✨ 新規AI生成</button>
+        </div>
+        <div id="mcoReportsList" style="padding:10px">
+          <div class="alert a-info"><span class="alert-icon">ℹ️</span><span>AI報告書生成ページで報告書を保存すると、ここに表示されます。</span></div>
+        </div>
+      </div>
+
       <div id="mco-docs" class="inner-content">
         <div id="mcoDocIntro"></div>
         <div class="alert a-info" style="margin-bottom:10px"><span class="alert-icon">ℹ️</span><span>書類はこちらに一元管理されます。申請管理・実習生ページからも同じ書類を参照できます。</span></div>
@@ -2424,6 +2441,20 @@ function renderCompanyDocsView(companyName){
           }).join('')}
         </div>
       </div>
+    </div>
+    <div class="panel mt10">
+      <div class="panel-head">
+        <span class="panel-title">📁 書類閲覧</span>
+        <button class="btn btn-primary btn-xs" onclick="openCompanyModal(CD.find(co=>co.name==='${companyName}')?.no||'new');setTimeout(()=>{switchTab('mco','mco-docs',document.querySelector('#mCompanyNew .inner-tab:nth-child(6)'));initCoDocTab();},150)">書類閲覧モーダルで開く →</button>
+      </div>
+      <div class="panel-body" id="inlineDocCatBtns" style="padding-bottom:4px">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+          ${DOC_CATS.map(cat=>`<button class="btn btn-ghost btn-xs" style="font-size:.65rem" onclick="renderInlineDocCat('${companyName}','${cat.id}')">${cat.label}</button>`).join('')}
+        </div>
+        <div id="inlineDocContent_${companyName.replace(/[^a-zA-Z0-9]/g,'_')}">
+          <div class="tc-muted fs-xs" style="padding:8px">カテゴリを選択してください</div>
+        </div>
+      </div>
     </div>`;
 }
 // ─── EXAM ───
@@ -2711,7 +2742,7 @@ function toggleAuditForm(){
   const auditForm = document.getElementById('auditExtraForm');
   const label = document.getElementById('labelKanriOrPatrol');
   if(!auditForm) return;
-  const isAudit = type === '定期監査報告書' || type?.includes('監査報告書');
+  const isAudit = type === '定期監査報告書' || type === '臨時監査報告書' || type?.includes('監査報告書');
   auditForm.style.display = isAudit ? 'block' : 'none';
   // 巡回系は「巡回員」、監査は「監理責任者」
   if(label) label.textContent = isAudit ? '監理責任者' : '巡回員';
@@ -2744,7 +2775,7 @@ async function generateReport(){
   const staff=document.getElementById('aiStaff')?.value;
   if(!memo?.trim()){alert('現場メモを入力してください');return;}
 
-  const isAudit = type === '定期監査報告書' || type?.includes('監査報告書');
+  const isAudit = type === '定期監査報告書' || type === '臨時監査報告書' || type?.includes('監査報告書');
 
   // 監査報告書専用フィールドを取得
   const respPerson   = document.getElementById('aiRespPerson')?.value || '';
@@ -2824,9 +2855,9 @@ ${issue ? '【指摘事項（報告書に必ず記載すること）】\n' + iss
 
   try{
     const aiText = await callGemini(prompt, system);
-    content.textContent=aiText;
+    content.value=aiText;
   }catch(e){
-    content.textContent='⚠️ '+e.message;
+    content.value='⚠️ '+e.message;
   }
   btn.disabled=false;btn.textContent='✨ AIで報告書を生成する';
 }
@@ -2835,7 +2866,7 @@ function downloadReportPDF(){
   const content = document.getElementById('reportContent');
   if(!content || !content.textContent.trim()){ alert('報告書を先に生成してください'); return; }
 
-  const text = content.textContent;
+  const text = content.value || content.textContent;
   const title = document.getElementById('aiCompany')?.value || '報告書';
   const date = (document.getElementById('aiDate')?.value || '').replace(/-/g,'');
   const type = document.getElementById('aiType')?.value || '報告書';
@@ -2874,7 +2905,148 @@ function downloadReportPDF(){
   setTimeout(()=>alert('ダウンロードしました。\nブラウザで開いてCtrl+P → 「PDFに保存」でPDF化できます。'), 500);
 }
 
-function copyReport(){const c=document.getElementById('reportContent');if(c)navigator.clipboard.writeText(c.textContent).then(()=>alert('コピーしました'));}
+// ─── 報告書の保存・表示 ───
+// 報告書データをlocalStorageに保存
+function saveReport(){
+  const content = document.getElementById('reportContent');
+  if(!content || !content.value?.trim()){ alert('報告書を先に生成してください'); return; }
+  const company = document.getElementById('aiCompany')?.value || '';
+  const type    = document.getElementById('aiType')?.value || '報告書';
+  const date    = document.getElementById('aiDate')?.value || new Date().toISOString().slice(0,10);
+  if(!company){ alert('実習実施者を選択してください'); return; }
+
+  const reports = JSON.parse(localStorage.getItem('arcana_reports') || '[]');
+  const newReport = {
+    id: Date.now(),
+    company, type, date,
+    text: content.value,
+    savedAt: new Date().toLocaleString('ja-JP')
+  };
+  reports.unshift(newReport);
+  localStorage.setItem('arcana_reports', JSON.stringify(reports));
+  alert(`✅ 保存しました\n${company} / ${type} / ${date}`);
+}
+
+// 実施者モーダルの巡回・監査報告書タブを描画
+function renderCoReports(){
+  const modal = document.getElementById('mCompanyNew');
+  const companyName = modal?.querySelector('.modal-title')?.textContent?.replace(/🏢\s*/,'').split('（')[0]?.trim() || '';
+  const el = document.getElementById('mcoReportsList');
+  if(!el) return;
+
+  const allReports = JSON.parse(localStorage.getItem('arcana_reports') || '[]');
+  const reports = companyName
+    ? allReports.filter(r => r.company === companyName)
+    : allReports;
+
+  if(!reports.length){
+    el.innerHTML = '<div class="alert a-info"><span class="alert-icon">ℹ️</span><span>保存された報告書はありません。AI報告書生成ページで生成・保存してください。</span></div>';
+    return;
+  }
+
+  el.innerHTML = reports.map(r => `
+    <div class="panel mb8" style="border:1px solid var(--border)">
+      <div class="panel-head" style="padding:8px 12px">
+        <div>
+          <span class="tag" style="margin-right:6px">${r.type}</span>
+          <span class="fs-sm fw7">${r.company}</span>
+          <span class="fs-xs tc-muted" style="margin-left:8px">${r.date}</span>
+        </div>
+        <div class="flex gap4">
+          <button class="btn btn-ghost btn-xs" onclick="viewSavedReport(${r.id})">📄 閲覧・編集</button>
+          <button class="btn btn-ghost btn-xs" onclick="deleteSavedReport(${r.id})">🗑</button>
+        </div>
+      </div>
+      <div style="padding:6px 12px;font-size:.68rem;color:var(--text-muted)">${r.text.slice(0,100)}...</div>
+    </div>
+  `).join('');
+}
+
+// 保存済み報告書を閲覧・編集
+function viewSavedReport(id){
+  const reports = JSON.parse(localStorage.getItem('arcana_reports') || '[]');
+  const r = reports.find(rep => rep.id === id);
+  if(!r) return;
+
+  const editEl = document.getElementById('mcoReportsList');
+  if(!editEl) return;
+  editEl.innerHTML = `
+    <div style="margin-bottom:8px;display:flex;gap:8px;align-items:center">
+      <button class="btn btn-ghost btn-sm" onclick="renderCoReports()">← 一覧に戻る</button>
+      <span class="tag">${r.type}</span>
+      <span class="fs-sm fw7">${r.company} / ${r.date}</span>
+    </div>
+    <textarea id="savedReportEdit_${id}" style="width:100%;min-height:400px;font-size:.72rem;line-height:1.9;font-family:var(--mono);border:1px solid var(--border);border-radius:6px;padding:10px;background:var(--surface);resize:vertical">${r.text}</textarea>
+    <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-primary btn-sm" onclick="updateSavedReport(${id})">💾 更新保存</button>
+      <button class="btn btn-success btn-sm" onclick="downloadSavedReportPDF(${id})">💾 PDF保存</button>
+    </div>
+  `;
+}
+
+// 保存済み報告書を更新
+function updateSavedReport(id){
+  const reports = JSON.parse(localStorage.getItem('arcana_reports') || '[]');
+  const idx = reports.findIndex(r => r.id === id);
+  if(idx === -1) return;
+  const newText = document.getElementById(`savedReportEdit_${id}`)?.value || '';
+  reports[idx].text = newText;
+  reports[idx].savedAt = new Date().toLocaleString('ja-JP');
+  localStorage.setItem('arcana_reports', JSON.stringify(reports));
+  alert('✅ 更新しました');
+}
+
+// 保存済み報告書を削除
+function deleteSavedReport(id){
+  if(!confirm('この報告書を削除しますか？')) return;
+  const reports = JSON.parse(localStorage.getItem('arcana_reports') || '[]').filter(r => r.id !== id);
+  localStorage.setItem('arcana_reports', JSON.stringify(reports));
+  renderCoReports();
+}
+
+// 保存済み報告書のPDF保存
+function downloadSavedReportPDF(id){
+  const reports = JSON.parse(localStorage.getItem('arcana_reports') || '[]');
+  const r = reports.find(rep => rep.id === id);
+  if(!r) return;
+  const text = document.getElementById(`savedReportEdit_${id}`)?.value || r.text;
+  const filename = `${r.type}_${r.company}_${r.date.replace(/-/g,'')}.html`;
+  const html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>${r.type} - ${r.company}</title>
+<style>@page{margin:20mm 15mm;size:A4}body{font-family:"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;font-size:11pt;line-height:1.9;color:#000;max-width:180mm;margin:0 auto;padding:10mm}h1{font-size:14pt;text-align:center;border-bottom:2px solid #000;padding-bottom:3mm;margin-bottom:6mm}.meta{text-align:right;font-size:10pt;margin-bottom:4mm}.body{white-space:pre-wrap;word-break:break-all;font-size:10.5pt}.footer{text-align:center;font-size:9pt;color:#666;margin-top:10mm;border-top:1px solid #ccc;padding-top:3mm}</style>
+</head><body><div class="meta">${r.company} &nbsp; ${r.date}</div><h1>${r.type}</h1>
+<div class="body">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+<div class="footer">ARC事業協同組合 &nbsp;|&nbsp; ARCANA v1</div></body></html>`;
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = filename; a.click(); URL.revokeObjectURL(a.href);
+}
+
+// インライン書類閲覧（申請書類閲覧ページ内）
+function renderInlineDocCat(companyName, catId){
+  const safeId = companyName.replace(/[^a-zA-Z0-9]/g,'_');
+  const el = document.getElementById(`inlineDocContent_${safeId}`);
+  if(!el) return;
+  const coNo = CD.find(co=>co.name===companyName)?.no || 'C000';
+  const cat = DOC_CATS.find(c=>c.id===catId);
+  if(!cat){ el.innerHTML='<div class="tc-muted fs-xs">カテゴリが見つかりません</div>'; return; }
+
+  const versions = companyDocVersions[coNo]?.[catId] || {};
+  el.innerHTML = `<div class="fs-xs fw7 tc-muted mb4">${cat.label}</div>` +
+    cat.docs.map((doc, i) => {
+      const key = `${coNo}_${catId}_${i}`;
+      const uploaded = docUploadDates[key];
+      return `<div class="chk-item" style="padding:5px 0">
+        <div class="chkbox ${uploaded?'on':''}">{{${uploaded?'✓':''}}}</div>
+        <div>
+          <div class="fs-xs fw7">${doc.name||doc}</div>
+          <div class="fs-xs tc-muted">${uploaded ? '📅 '+uploaded.date+' '+uploaded.name : '未アップロード'}</div>
+        </div>
+      </div>`;
+    }).join('');
+}
+
+function copyReport(){const c=document.getElementById('reportContent');if(c)navigator.clipboard.writeText(c.value||c.textContent).then(()=>alert('コピーしました'));}
+
 
 // ─── NAV ───
 function showPage(id){
