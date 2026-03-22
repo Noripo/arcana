@@ -1432,7 +1432,7 @@ body::before{content:'';position:fixed;inset:0;background:
       </div>
       <div class="panel" id="reportOut" style="display:none">
         <div class="panel-head"><span class="panel-title">📄 生成された報告書</span>
-          <div class="flex gap4"><button class="btn btn-ghost btn-sm" onclick="copyReport()">📋 コピー</button><button class="btn btn-success btn-sm">💾 PDF保存</button></div>
+          <div class="flex gap4"><button class="btn btn-ghost btn-sm" onclick="copyReport()">📋 コピー</button><button class="btn btn-success btn-sm" onclick="downloadReportPDF()">💾 PDF保存</button></div>
         </div>
         <div class="panel-body"><div id="reportContent" style="font-size:.72rem;line-height:1.9;white-space:pre-wrap;font-family:var(--mono);color:var(--text-dim)"></div></div>
       </div>
@@ -2559,7 +2559,7 @@ async function callGemini(prompt, system){
       { method:'POST', headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
           contents:[{parts:[{text:fullPrompt}]}],
-          generationConfig:{temperature:0.3, maxOutputTokens:2000}
+          generationConfig:{temperature:0.3, maxOutputTokens:8000}
         })
       }
     );
@@ -2828,6 +2828,46 @@ ${issue ? '【指摘事項（報告書に必ず記載すること）】\n' + iss
   }
   btn.disabled=false;btn.textContent='✨ AIで報告書を生成する';
 }
+
+function downloadReportPDF(){
+  const content = document.getElementById('reportContent');
+  if(!content || !content.textContent.trim()){ alert('報告書を先に生成してください'); return; }
+
+  // 印刷用スタイルで新しいウィンドウを開いてPDF保存
+  const text = content.textContent;
+  const title = document.getElementById('aiCompany')?.value || '報告書';
+  const date = document.getElementById('aiDate')?.value || '';
+  const type = document.getElementById('aiType')?.value || '報告書';
+
+  const html = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>${type} - ${title}</title>
+<style>
+  @page { margin: 20mm 15mm; size: A4; }
+  body { font-family: "Hiragino Kaku Gothic ProN","Meiryo","Yu Gothic",sans-serif; font-size: 11pt; line-height: 1.8; color: #000; }
+  h1 { font-size: 14pt; text-align: center; margin: 0 0 4mm; border-bottom: 2px solid #000; padding-bottom: 2mm; }
+  h2,h3 { font-size: 12pt; margin: 4mm 0 2mm; }
+  pre, .body { white-space: pre-wrap; word-break: break-all; font-size: 10.5pt; line-height: 1.9; }
+  .header-info { text-align: right; font-size: 10pt; margin-bottom: 4mm; }
+  .footer { text-align: center; font-size: 9pt; color: #666; margin-top: 8mm; border-top: 1px solid #ccc; padding-top: 2mm; }
+</style>
+</head>
+<body>
+<div class="header-info">${date}</div>
+<h1>${type}</h1>
+<h2>${title}</h2>
+<div class="body">${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+<div class="footer">ARC事業協同組合 &nbsp;|&nbsp; ARCANA v1</div>
+<script>window.onload=function(){window.print();}<\/script>
+</body></html>`;
+
+  const w = window.open('', '_blank', 'width=800,height=900');
+  w.document.write(html);
+  w.document.close();
+}
+
 function copyReport(){const c=document.getElementById('reportContent');if(c)navigator.clipboard.writeText(c.textContent).then(()=>alert('コピーしました'));}
 
 // ─── NAV ───
@@ -3410,7 +3450,7 @@ function buildExamDocsSection(){
 // ▼▼▼ デプロイ後にここにURLを貼り付けてください ▼▼▼
 const GAS_URL = '';
 // Gemini APIキーを直接設定（GAS経由不要）
-const GEMINI_API_KEY = 'AIzaSyADWDIQhnVprJzu1CorKaPL3tfT83RUSfM';
+const GEMINI_API_KEY = '';
 // ▲▲▲ ここまで ▲▲▲
 
 const GAS_MODE = () => !!GAS_URL; // GAS_URLが設定されていればGASモード
