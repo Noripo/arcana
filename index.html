@@ -2741,11 +2741,20 @@ function toggleAuditForm(){
   const type = document.getElementById('aiType')?.value;
   const auditForm = document.getElementById('auditExtraForm');
   const label = document.getElementById('labelKanriOrPatrol');
+  const sel = document.getElementById('aiKanriResp');
   if(!auditForm) return;
   const isAudit = type === '定期監査報告書' || type === '臨時監査報告書' || type?.includes('監査報告書');
   auditForm.style.display = isAudit ? 'block' : 'none';
-  // 巡回系は「巡回員」、監査は「監理責任者」
-  if(label) label.textContent = isAudit ? '監理責任者' : '巡回員';
+
+  if(isAudit){
+    // 監査報告書：監理責任者は眞下 健人のみ
+    if(label) label.textContent = '監理責任者';
+    if(sel) sel.innerHTML = '<option>眞下 健人</option>';
+  } else {
+    // 巡回報告書：巡回員は全スタッフから選択
+    if(label) label.textContent = '巡回員';
+    if(sel) sel.innerHTML = '<option>五十嵐 一弘</option><option>眞下 健人</option><option>松崎 礼幸</option><option>新工 由佳莉</option><option>大石 広樹</option><option>小原 孝徳</option>';
+  }
 }
 
 // 実施者選択で責任者・指導員プルダウンを更新
