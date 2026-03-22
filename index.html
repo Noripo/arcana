@@ -2548,6 +2548,38 @@ function renderIssues(f='all'){
 }
 
 // ─── AI CHAT ───
+
+// ── Gemini API 直接呼び出し（CORSフリー）──
+async function callGemini(prompt, system){
+  // Gemini APIキーが設定されている場合は直接呼び出し
+  if(GEMINI_API_KEY){
+    const fullPrompt = system ? system + '\n\n' + prompt : prompt;
+    const res = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + GEMINI_API_KEY,
+      { method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          contents:[{parts:[{text:fullPrompt}]}],
+          generationConfig:{temperature:0.3, maxOutputTokens:2000}
+        })
+      }
+    );
+    const d = await res.json();
+    if(d.error) throw new Error(d.error.message);
+    const text = d.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    if(!text) throw new Error('応答が空でした');
+    return text;
+  }
+  // GAS経由（フォールバック）
+  if(GAS_URL){
+    const gasRes = await fetch(GAS_URL, {method:'POST', headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'aiGenerate', token:sessionStorage.getItem('arcana-token')||'', prompt, system})});
+    const gasData = await gasRes.json();
+    if(gasData.ok) return gasData.text;
+    throw new Error(gasData.error || 'GASエラー');
+  }
+  throw new Error('APIキーまたはGAS_URLを設定してください。');
+}
+
 let chatHist=[];
 async function sendChat(){
   const input=document.getElementById('chatInput');const btn=document.getElementById('chatSendBtn');
@@ -2654,17 +2686,7 @@ ARC事業協同組合（監理団体）。送出し機関：LPK GlobalAlpha・LP
 【回答スタイル】
 日本語・公文書体。条文番号（法・規則・省令様式番号）を明記。実務的で具体的な内容を優先。不明点は「OTITへ確認することを推奨」と付記。`;
   try{
-    let reply='';
-    if(GAS_URL){
-      const gasRes=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},
-        body:JSON.stringify({action:'aiGenerate',token:sessionStorage.getItem('arcana-token')||'',
-          prompt:msg,system:sysPr})});
-      const gd=await gasRes.json();
-      if(gd.ok) reply=gd.text;
-      else throw new Error(gd.error||'GASエラー');
-    } else {
-      throw new Error('GAS_URLが未設定です。管理者にお問い合わせください。');
-    }
+    let reply = await callGemini(msg, sysPr);
     chatHist.push({role:'assistant',content:reply});
     const el=document.getElementById(lid);
     if(el){el.querySelector('.ai-bbl').style.whiteSpace='pre-wrap';el.querySelector('.ai-bbl').textContent=reply;}
@@ -2799,16 +2821,7 @@ ${issue ? '【指摘事項（報告書に必ず記載すること）】\n' + iss
   }
 
   try{
-    let aiText='';
-    if(GAS_URL){
-      const gasRes=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},
-        body:JSON.stringify({action:'aiGenerate',token:sessionStorage.getItem('arcana-token')||'',prompt,system})});
-      const gasData=await gasRes.json();
-      if(gasData.ok) aiText=gasData.text;
-      else throw new Error(gasData.error||'GASエラー');
-    } else {
-      throw new Error('GAS_URLが未設定です。管理者にお問い合わせください。');
-    }
+    const aiText = await callGemini(prompt, system);
     content.textContent=aiText;
   }catch(e){
     content.textContent='⚠️ '+e.message;
@@ -3396,6 +3409,8 @@ function buildExamDocsSection(){
 // ================================================================
 // ▼▼▼ デプロイ後にここにURLを貼り付けてください ▼▼▼
 const GAS_URL = '';
+// Gemini APIキーを直接設定（GAS経由不要）
+const GEMINI_API_KEY = 'AIzaSyADWDIQhnVprJzu1CorKaPL3tfT83RUSfM';
 // ▲▲▲ ここまで ▲▲▲
 
 const GAS_MODE = () => !!GAS_URL; // GAS_URLが設定されていればGASモード
