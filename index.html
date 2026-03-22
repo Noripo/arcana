@@ -1307,22 +1307,102 @@ body::before{content:'';position:fixed;inset:0;background:
 
 <!-- ══════════════ AI REPORT ══════════════ -->
 <div id="page-ai" class="page">
-  <div class="sec-head"><div><div class="sec-title">AI報告書生成</div><div class="sec-sub">現場メモを貼るだけでAIが正式な報告書に整形（Claude API）</div></div></div>
+  <div class="sec-head"><div><div class="sec-title">AI報告書生成</div><div class="sec-sub">現場メモを入力するだけでAIが正式な報告書を作成します</div></div></div>
   <div class="g2">
     <div>
       <div class="panel">
-        <div class="panel-head"><span class="panel-title">📝 現場メモ → 報告書生成</span></div>
+        <div class="panel-head"><span class="panel-title">📝 報告書入力フォーム</span></div>
         <div class="panel-body">
-          <div class="alert a-teal mb8"><span class="alert-icon">💡</span><span>殴り書きそのままでOK。AIが正式書式に変換します。</span></div>
-          <div class="fg"><label class="fl">実習実施者</label><select class="fs" id="aiCompany"><option>山田食品工業（株）</option><option>鈴木金属工業（株）</option><option>渡辺建設（株）</option></select></div>
+          <div class="alert a-teal mb8"><span class="alert-icon">💡</span><span>現場メモを入力するとAIが項目ごとに文章化します。</span></div>
+
+          <!-- 基本情報 -->
           <div class="g2">
-            <div class="fg"><label class="fl">報告書の種類</label><select class="fs" id="aiType"><option>定期巡回報告書（1号ロ）</option><option>定期巡回報告書（2号ロ）</option><option>定期監査報告書</option><option>臨時巡回報告書</option></select></div>
-            <div class="fg"><label class="fl">巡回日</label><input type="date" class="fi" id="aiDate" value="2025-07-14"></div>
+            <div class="fg"><label class="fl">実習実施者</label>
+              <select class="fs" id="aiCompany" onchange="updateAiStaffOptions()">
+                <option>山田食品工業（株）</option><option>鈴木金属工業（株）</option><option>渡辺建設（株）</option>
+              </select>
+            </div>
+            <div class="fg"><label class="fl">報告書の種類</label>
+              <select class="fs" id="aiType" onchange="toggleAuditForm()">
+                <option>定期巡回報告書（1号ロ）</option>
+                <option>定期巡回報告書（2号ロ）</option>
+                <option value="監査報告書">定期監査報告書</option>
+                <option>臨時巡回報告書</option>
+              </select>
+            </div>
           </div>
-          <div class="fg"><label class="fl">現場メモ（自由記述）</label><textarea class="fta" id="aiMemo" style="min-height:120px" placeholder="箇条書きで何でもOK：&#10;・実習生3名と面談&#10;・残業15h。36協定範囲内&#10;・賃金台帳確認→一致&#10;・有休説明不十分→指導"></textarea></div>
-          <div class="fg"><label class="fl">指摘事項</label><textarea class="fta" id="aiIssue" style="min-height:50px" placeholder="なければ空欄OK"></textarea></div>
-          <div class="fg"><label class="fl">担当監査員</label><select class="fs" id="aiStaff"><option>五十嵐 一弘</option><option>眞下 健人</option><option>松崎 礼幸</option><option>新工 由佳莉</option><option>大石 広樹</option><option>小原 孝徳</option></select></div>
-          <button class="btn btn-primary" style="width:100%" id="genBtn" onclick="generateReport()">✨ AIで報告書を生成する</button>
+          <div class="g2">
+            <div class="fg"><label class="fl">実施日</label><input type="date" class="fi" id="aiDate"></div>
+            <div class="fg" id="fgKanriOrPatrol">
+              <label class="fl" id="labelKanriOrPatrol">巡回員</label>
+              <select class="fs" id="aiKanriResp">
+                <option>五十嵐 一弘</option><option>眞下 健人</option><option>松崎 礼幸</option>
+                <option>新工 由佳莉</option><option>大石 広樹</option><option>小原 孝徳</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 監査報告書専用フォーム -->
+          <div id="auditExtraForm" style="display:none">
+            <div class="section-divider">監査報告書 専用項目</div>
+
+            <!-- 人員情報 -->
+            <div class="g2">
+              <div class="fg"><label class="fl">技能実習責任者</label>
+                <select class="fs" id="aiRespPerson">
+                  <option>（実施者を選択してください）</option>
+                </select>
+              </div>
+              <div class="fg"><label class="fl">技能実習指導員</label>
+                <select class="fs" id="aiInstructor">
+                  <option>（実施者を選択してください）</option>
+                </select>
+              </div>
+            </div>
+            <div class="g2">
+              <div class="fg"><label class="fl">監査員</label>
+                <select class="fs" id="aiStaff">
+                  <option>五十嵐 一弘</option><option>眞下 健人</option><option>松崎 礼幸</option>
+                  <option>新工 由佳莉</option><option>大石 広樹</option><option>小原 孝徳</option>
+                </select>
+              </div>
+              <div class="fg"><label class="fl">監査担当（補助者）</label>
+                <select class="fs" id="aiSubStaff">
+                  <option>なし</option>
+                  <option>五十嵐 一弘</option><option>眞下 健人</option><option>松崎 礼幸</option>
+                  <option>新工 由佳莉</option><option>大石 広樹</option><option>小原 孝徳</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="section-divider" style="font-size:.7rem">実施状況の確認</div>
+            <div class="g3" style="gap:8px">
+              <div class="fg">
+                <label class="fl">指導員からの報告</label>
+                <select class="fs" id="auditReport"><option>実施</option><option>未実施</option></select>
+              </div>
+              <div class="fg">
+                <label class="fl">書類の閲覧</label>
+                <select class="fs" id="auditDocs"><option>実施</option><option>未実施</option></select>
+              </div>
+              <div class="fg">
+                <label class="fl">生活環境の確認</label>
+                <select class="fs" id="auditLife"><option>実施</option><option>未実施</option></select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 現場メモ -->
+          <div class="fg" style="margin-top:8px">
+            <label class="fl">現場メモ（自由記述）</label>
+            <textarea class="fta" id="aiMemo" style="min-height:130px" placeholder="箇条書きでOK：&#10;・実習生3名と面談（グエン・スリ・ファウジ）&#10;・残業15h、36協定範囲内&#10;・賃金台帳確認→賃金は計画通り支払い確認&#10;・有休制度の説明が不十分→指導した"></textarea>
+          </div>
+          <div class="fg">
+            <label class="fl">指摘事項（なければ空欄）</label>
+            <textarea class="fta" id="aiIssue" style="min-height:50px" placeholder="例：宿舎の消火器期限切れ→至急交換するよう指導"></textarea>
+          </div>
+
+          <button class="btn btn-primary" style="width:100%;margin-top:8px" id="genBtn" onclick="generateReport()">✨ AIで報告書を生成する</button>
         </div>
       </div>
       <div class="panel">
@@ -2601,6 +2681,36 @@ function qprompt(k){
   const p={reminder:'山田食品工業、中村農業、田中農園への月次資料2回目督促メールを作成してください。',issue_letter:'中村農業（有）への指摘通知書。宿舎火災警報器未設置（重大）、改善期限7/15。',monthly_summary:'2025年7月の監理業務月次サマリー。巡回12件、監査2件未実施、月次資料5社未回収（賃金台帳・出勤簿・実習日誌）、指摘3件対応中。',law_qa:'技能実習法における定期監査の実施頻度・記録義務・OTITへの報告義務について教えてください。'};
   const input=document.getElementById('chatInput');if(input&&p[k]){input.value=p[k];sendChat();}
 }
+// 監査報告書フォームの表示切替
+function toggleAuditForm(){
+  const type = document.getElementById('aiType')?.value;
+  const auditForm = document.getElementById('auditExtraForm');
+  const label = document.getElementById('labelKanriOrPatrol');
+  if(!auditForm) return;
+  const isAudit = type === '監査報告書' || type?.includes('監査報告書');
+  auditForm.style.display = isAudit ? 'block' : 'none';
+  // 巡回系は「巡回員」、監査は「監理責任者」
+  if(label) label.textContent = isAudit ? '監理責任者' : '巡回員';
+}
+
+// 実施者選択で責任者・指導員プルダウンを更新
+function updateAiStaffOptions(){
+  const company = document.getElementById('aiCompany')?.value;
+  const co = CD.find(c => c.name === company);
+  const respSel = document.getElementById('aiRespPerson');
+  const instSel = document.getElementById('aiInstructor');
+  if(!respSel || !instSel) return;
+
+  const respName = co?.resp || '（未設定）';
+  const instName = co?.instructor || '（未設定）';
+
+  respSel.innerHTML = `<option>${respName}</option>`;
+  if(co?.resp2) respSel.innerHTML += `<option>${co.resp2}</option>`;
+
+  instSel.innerHTML = `<option>${instName}</option>`;
+  if(co?.instructor2) instSel.innerHTML += `<option>${co.instructor2}</option>`;
+}
+
 async function generateReport(){
   const company=document.getElementById('aiCompany')?.value;
   const type=document.getElementById('aiType')?.value;
@@ -2609,16 +2719,90 @@ async function generateReport(){
   const issue=document.getElementById('aiIssue')?.value;
   const staff=document.getElementById('aiStaff')?.value;
   if(!memo?.trim()){alert('現場メモを入力してください');return;}
+
+  const isAudit = type === '監査報告書' || type?.includes('監査報告書');
+
+  // 監査報告書専用フィールドを取得
+  const respPerson   = document.getElementById('aiRespPerson')?.value || '';
+  const instructor   = document.getElementById('aiInstructor')?.value || '';
+  const kanriResp    = document.getElementById('aiKanriResp')?.value || '';
+  const subStaff     = document.getElementById('aiSubStaff')?.value || 'なし';
+  const auditReport= document.getElementById('auditReport')?.value || '';
+  const auditDocs  = document.getElementById('auditDocs')?.value || '';
+  const auditLife  = document.getElementById('auditLife')?.value || '';
+
   const btn=document.getElementById('genBtn');btn.disabled=true;btn.textContent='✨ 生成中...';
   const out=document.getElementById('reportOut');const content=document.getElementById('reportContent');
   out.style.display='block';content.textContent='生成中...';out.scrollIntoView({behavior:'smooth'});
-  const prompt=`以下の現場メモを元に正式な${type}を作成してください。\n【実習実施者】${company}\n【実施日】${date}\n【担当監理員】${staff}\n【現場メモ】\n${memo}${issue?'\n【指摘事項】\n'+issue:''}`;
+
+  let prompt, system;
+
+  if(isAudit){
+    // ── 監査報告書専用プロンプト ──
+    system = `あなたはARC事業協同組合の監理員です。技能実習制度運用要領（令和7年12月改正版・規則第52条）に基づく定期監査報告書を作成します。
+重要ルール：
+①入力された現場メモの内容を必ずそのまま反映させること
+②「特記事項」「監査結果」「総合講評」は現場メモを要約・文章化して具体的に記載すること
+③テンプレートや「〇〇」「記入例」などの未入力部分を残さないこと
+④各項目を必ず埋めた完成済みの報告書として出力すること
+⑤出力形式は以下の項目を順番に記載すること（マークダウンは使わず、日本語公文書体で）`;
+
+    prompt = `以下の情報をもとに、定期監査報告書を作成してください。
+
+【基本情報】
+実習実施者：${company}
+監査実施日：${date}
+監査員：${staff}
+監査担当（補助者）：${subStaff}
+監理責任者：${kanriResp}
+技能実習責任者：${respPerson}
+技能実習指導員：${instructor}
+
+【実施状況】
+指導員からの報告：${auditReport}
+書類の閲覧：${auditDocs}
+生活環境の確認：${auditLife}
+
+【現場メモ（この内容を各項目に反映すること）】
+${memo}
+${issue ? '【指摘事項（必ず報告書に記載すること）】\n' + issue : '指摘事項：なし'}
+
+上記をもとに、以下の項目を順番に記載した完成済みの定期監査報告書を作成してください：
+
+1. 技能実習責任者：${respPerson}
+2. 技能実習指導員：${instructor}
+3. 監理責任者：${kanriResp}
+4. 監査員：${staff}
+5. 監査担当（補助者）：${subStaff}
+6. 指導員からの報告：${auditReport}
+7. 書類の閲覧：${auditDocs}
+8. 生活環境の確認：${auditLife}
+9. 特記事項（現場メモから重要事実を箇条書きで記載）
+10. 監査結果（現場メモをもとに監査内容を文章で記載・300字程度）
+11. 総合講評（監査全体の総評を文章で記載・200字程度）
+12. 備考（ARC事業協同組合・監査員：${staff}）`;
+
+  } else {
+    // ── 巡回報告書プロンプト ──
+    system = `あなたはARC事業協同組合の監理員です。技能実習制度運用要領（令和7年12月改正版）に基づく正式な${type}を日本語・公文書体で作成します。重要：①入力された情報をそのまま使用②テンプレートや「〇〇」を残さない③現場メモの内容をすべて具体的に反映④完成済みの報告書として出力`;
+
+    prompt = `以下の情報を使って、完成済みの${type}を作成してください。
+
+【実習実施者】${company}
+【実施日】${date}
+【巡回員】${kanriResp}
+【現場メモ（この内容を必ず報告書に反映すること）】
+${memo}
+${issue ? '【指摘事項（報告書に必ず記載すること）】\n' + issue : '【指摘事項】なし'}
+
+上記の情報をすべて盛り込んだ完成済みの${type}を作成してください。`;
+  }
+
   try{
     let aiText='';
     if(GAS_URL){
       const gasRes=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},
-        body:JSON.stringify({action:'aiGenerate',token:sessionStorage.getItem('arcana-token')||'',prompt,
-          system:'ARC事業協同組合の監理団体として、技能実習制度運用要領（令和7年12月8日改正版）に基づく正式な書類を日本語・公文書体で作成します。【監査】3か月1回以上（規則第52条第1号）：実地確認・責任者から報告・技能実習生の4分の1以上と面談・設備確認・宿泊施設確認。監査報告書（省令様式第22号）は2か月以内に機構地方事務所へ提出。【訪問指導】1号技能実習のみ・月1回以上（規則第52条第3号）。訪問指導記録書（参考様式第4-10号）を作成。【臨時監査】認定取消し事由の疑いがある場合は直ちに実施。人権侵害疑いの場合は2週間以内に機構へ報告。指摘事項がある場合は改善期限・根拠条文・改善確認方法を明記すること。'})});
+        body:JSON.stringify({action:'aiGenerate',token:sessionStorage.getItem('arcana-token')||'',prompt,system})});
       const gasData=await gasRes.json();
       if(gasData.ok) aiText=gasData.text;
       else throw new Error(gasData.error||'GASエラー');
@@ -3211,7 +3395,7 @@ function buildExamDocsSection(){
 // GAS連携設定
 // ================================================================
 // ▼▼▼ デプロイ後にここにURLを貼り付けてください ▼▼▼
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbzWduYcSVUQ06mdtNf-CJfJxelFsirzcA0EGl3I3nHn_abd-L6hoenHkfQ0leTqoZ6Jtw/exec';
+const GAS_URL = '';
 // ▲▲▲ ここまで ▲▲▲
 
 const GAS_MODE = () => !!GAS_URL; // GAS_URLが設定されていればGASモード
