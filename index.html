@@ -694,8 +694,8 @@ body::before{content:'';position:fixed;inset:0;background:
               <div class="fg"><label class="fl">呼び名（ニックネーム）</label><input class="fi" id="fNick" placeholder="例：アン、マイ"></div>
             </div>
             <div><div class="section-divider">出身・送出し</div>
-              <div class="fg"><label class="fl">出身国</label><select class="fs" id="fCountry"><option>インドネシア</option><option>ベトナム</option><option>フィリピン</option><option>ミャンマー</option><option>カンボジア</option><option>タイ</option><option>その他</option></select></div>
-              <div class="fg"><label class="fl">送出し機関</label><input class="fi" id="fSendOrg" placeholder="例：LPK GlobalAlpha"></div>
+              <div class="fg"><label class="fl">出身国</label><select class="fs" id="fCountry"><option>インドネシア</option><option>ベトナム</option><option>フィリピン</option><option>ミャンマー</option><option>カンボジア</option><option>タイ</option><option>パキスタン</option><option>その他</option></select></div>
+              <div class="fg"><label class="fl">送出し機関</label><select class="fs" id="fSendOrg"><option>LPK GlobalAlpha</option><option>LPK ARCADIA</option><option>LPK BALI</option><option>HANA Global</option><option>MyanmarUnity</option><option>その他</option></select></div>
               <div class="fg"><label class="fl">生年月日</label><input type="date" class="fi" id="fBirth"></div>
               <div class="fg"><label class="fl">性別</label><select class="fs" id="fGender"><option>男性</option><option>女性</option></select></div>
             </div>
@@ -707,7 +707,9 @@ body::before{content:'';position:fixed;inset:0;background:
           </div>
           <div class="g2">
             <div class="fg"><label class="fl">実習職種・作業</label><input class="fi" id="fJob" placeholder="食品製造・惣菜製造"></div>
-            <div class="fg"><label class="fl">技能実習計画番号</label><input class="fi" id="fPlan" style="font-family:var(--mono)"></div>
+            <div class="fg"><label class="fl">技能実習計画番号（1号）</label><input class="fi" id="fPlan1" style="font-family:var(--mono)" placeholder="第20XXXXXX号"></div>
+              <div class="fg"><label class="fl">技能実習計画番号（2号）</label><input class="fi" id="fPlan2" style="font-family:var(--mono)" placeholder="第20XXXXXX号"></div>
+              <div class="fg"><label class="fl">技能実習計画番号（3号）</label><input class="fi" id="fPlan3" style="font-family:var(--mono)" placeholder="第20XXXXXX号"></div>
           </div>
           <div class="g2">
             <div class="fg"><label class="fl">入国日</label><input type="date" class="fi" id="fEntry"></div>
@@ -1319,7 +1321,7 @@ body::before{content:'';position:fixed;inset:0;background:
           </div>
           <div class="fg"><label class="fl">現場メモ（自由記述）</label><textarea class="fta" id="aiMemo" style="min-height:120px" placeholder="箇条書きで何でもOK：&#10;・実習生3名と面談&#10;・残業15h。36協定範囲内&#10;・賃金台帳確認→一致&#10;・有休説明不十分→指導"></textarea></div>
           <div class="fg"><label class="fl">指摘事項</label><textarea class="fta" id="aiIssue" style="min-height:50px" placeholder="なければ空欄OK"></textarea></div>
-          <div class="fg"><label class="fl">担当監理員</label><select class="fs" id="aiStaff"><option>田中 ○○</option><option>佐藤 ○○</option></select></div>
+          <div class="fg"><label class="fl">担当監査員</label><select class="fs" id="aiStaff"><option>五十嵐 一弘</option><option>眞下 健人</option><option>松崎 礼幸</option><option>新工 由佳莉</option><option>大石 広樹</option><option>小原 孝徳</option></select></div>
           <button class="btn btn-primary" style="width:100%" id="genBtn" onclick="generateReport()">✨ AIで報告書を生成する</button>
         </div>
       </div>
@@ -1397,7 +1399,7 @@ body::before{content:'';position:fixed;inset:0;background:
       <div class="fg"><label class="fl">送出し機関名</label>
         <select class="fs" id="nIntSendOrg">
           <option value="">— 選択 —</option>
-          <option>LPK GlobalAlpha</option><option>LPK Arcadia</option><option>LPK Dera Foundation</option><option>LPK Chiran</option><option>その他</option>
+          <option>LPK GlobalAlpha</option><option>LPK ARCADIA</option><option>LPK BALI</option><option>HANA Global</option><option>MyanmarUnity</option><option>その他</option>
         </select>
       </div>
       <div class="fg"><label class="fl">ZOOM URL</label>
@@ -1448,12 +1450,12 @@ body::before{content:'';position:fixed;inset:0;background:
         <div style="flex:1">
           <div class="g2"><div class="fg"><label class="fl">氏名（カタカナ）<span class="required">必須</span></label><input class="fi" placeholder="グエン・ヴァン・アン"></div><div class="fg"><label class="fl">氏名（アルファベット）<span class="required">必須</span></label><input class="fi" placeholder="NGUYEN VAN AN"></div></div>
           <div class="fg"><label class="fl">呼び名（ニックネーム）</label><input class="fi" placeholder="例：アン"></div>
-          <div class="g2"><div class="fg"><label class="fl">出身国</label><select class="fs"><option>インドネシア</option><option>ベトナム</option><option>フィリピン</option><option>ミャンマー</option><option>カンボジア</option><option>その他</option></select></div><div class="fg"><label class="fl">送出し機関</label><input class="fi" placeholder="LPK GlobalAlpha"></div></div>
+          <div class="g2"><div class="fg"><label class="fl">出身国</label><select class="fs"><option>インドネシア</option><option>ベトナム</option><option>フィリピン</option><option>ミャンマー</option><option>カンボジア</option><option>タイ</option><option>パキスタン</option><option>その他</option></select></div><div class="fg"><label class="fl">送出し機関</label><select class="fs"><option>LPK GlobalAlpha</option><option>LPK ARCADIA</option><option>LPK BALI</option><option>HANA Global</option><option>MyanmarUnity</option><option>その他</option></select></div></div>
         </div>
       </div>
       <div class="divider"></div>
       <div class="g2"><div class="fg"><label class="fl">配属先</label><select class="fs"><option>山田食品工業（株）</option><option>鈴木金属工業（株）</option><option>渡辺建設（株）</option><option>中村農業（有）</option></select></div><div class="fg"><label class="fl">実習種別</label><select class="fs"><option>1号技能実習</option><option>2号技能実習</option><option>3号技能実習</option></select></div></div>
-      <div class="g2"><div class="fg"><label class="fl">実習職種・作業</label><input class="fi" placeholder="食品製造・惣菜製造"></div><div class="fg"><label class="fl">技能実習計画番号</label><input class="fi" style="font-family:var(--mono)"></div></div>
+      <div class="fg"><label class="fl">実習職種・作業</label><input class="fi" placeholder="食品製造・惣菜製造"></div><div class="fg"><label class="fl">技能実習計画番号（1号）</label><input class="fi" style="font-family:var(--mono)" placeholder="第20XXXXXX号"></div><div class="fg"><label class="fl">技能実習計画番号（2号）</label><input class="fi" style="font-family:var(--mono)" placeholder="第20XXXXXX号"></div><div class="fg"><label class="fl">技能実習計画番号（3号）</label><input class="fi" style="font-family:var(--mono)" placeholder="第20XXXXXX号"></div>
       <div class="g2"><div class="fg"><label class="fl">入国日</label><input type="date" class="fi"></div><div class="fg"><label class="fl">生年月日</label><input type="date" class="fi"></div></div>
       <div class="divider"></div>
       <div class="g2"><div class="fg"><label class="fl">パスポート番号</label><input class="fi" style="font-family:var(--mono)" placeholder="A12345678"></div><div class="fg"><label class="fl">パスポート期限</label><input type="date" class="fi"></div></div>
@@ -2475,64 +2477,23 @@ async function sendChat(){
   const lid='ld'+Date.now();
   appendMsg('ai','<span class="loading">考えています</span>',lid);
   chatHist.push({role:'user',content:msg});
+  const sysPr=`あなたはARC事業協同組合の監理業務専門AIアシスタントです。送出し機関（LPK GlobalAlpha、LPK ARCADIA、LPK BALI、HANA Global、MyanmarUnity）と連携。定期監査は3ヶ月に1回以上（法第39条）。転籍制限期間は分野ごとに1〜2年。本人意向転籍要件：①制限期間経過②技能試験合格③日本語試験合格。日本語A2相当・100時間以上講習提供義務。回答スタイル：日本語・公文書体・法令根拠明記。`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
-        system:`あなたはARC事業協同組合の監理業務専門AIアシスタントです。
-【組織概要】
-ARC事業協同組合は監理支援機関（旧：監理団体）として、技能実習・育成就労・特定技能制度に基づく外国人材の受入れ支援を行っています。グローバルアルファグループの一員で、インドネシア・ベトナム等の送出し機関（LPK GlobalAlpha、LPK Arcadia、LPK Dera Foundation、LPK Chiran）と連携しています。
-
-【育成就労制度 運用要領（令和8年2月）の主要ポイント】
-■ 制度の目的
-技能実習制度を廃止し、令和9年4月1日から育成就労外国人の受入れ開始。3年間の就労を通じて特定技能1号水準の技能を有する人材を育成・確保することが目的。「国際貢献」から「人材育成・人材確保」へ転換。
-
-■ 名称変更
-・監理団体 → 監理支援機関
-・技能実習生 → 育成就労外国人
-・技能実習計画 → 育成就労計画
-・OTIT → 外国人育成就労機構（機構）
-
-■ 定期監査（法第39条）
-・3ヶ月に1回以上の実施が義務
-・臨時監査：転籍申出受理時・認定取消事由の疑い発生時 → 直ちに実施
-・監査記録は帳簿として保存義務あり（法第20条）
-
-■ 転籍制度（大幅変更）
-・転籍制限期間：分野ごとに1年〜2年（分野別運用方針で規定）
-・本人意向転籍の要件：①転籍制限期間の経過 ②技能試験合格 ③日本語能力試験合格 ④転籍先の認定基準適合
-・やむを得ない事情（倒産・人権侵害・賃金不払い・重大法令違反等）は制限期間前でも転籍可
-・転籍フロー：申出書提出 → 育成就労実施者/監理支援機関受理 → 機構へ届出 → 対応通知書交付 → 連絡調整
-
-■ 日本語要件（新設）
-・3年間でA2相当（日本語教育の参照枠）の修得が目標
-・100時間以上の日本語講習機会の提供が育成就労実施者の義務
-・1年目までにA1相当超の日本語試験受験義務
-
-■ 試験・評価
-・1年目：基礎級技能検定 + 日本語試験（A1相当超）
-・3年目（終了時）：3級技能検定または特定技能1号評価試験 + 日本語試験（A2相当）
-・合格証書は本人へ速やかに手交する義務
-・受験費用・時間は育成就労実施者の負担（受験日は労働時間）
-
-■ 人数枠（監理型・基本枠）
-常勤3〜30人→9人、31〜40人→12人、41〜50人→15人、51〜100人→18人
-優良認定で拡大、指定区域（大都市圏外等）でさらに拡大
-
-■ 帳簿書類の保存
-①育成就労外国人の管理簿 ②育成就労計画の履行状況に係る管理簿 ③業務・指導内容の日誌 ④講習実施記録
-
-【業務支援の範囲】
-巡回報告書・監査報告書・指摘通知書・リマインドメール・転籍対応書類・申出受理届出書・法令Q&A・育成就労計画作成支援・日本語講習計画支援
-
-【回答スタイル】
-日本語・公文書体。法令根拠（条文番号・運用要領の章番号）を明記。実務的で具体的な内容を優先。`,
-        messages:chatHist})});
-    const d=await r.json();
-    const reply=d.content?.find(b=>b.type==='text')?.text||'エラーが発生しました。';
+    let reply='';
+    if(GAS_URL){
+      const gasRes=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({action:'aiGenerate',token:sessionStorage.getItem('arcana-token')||'',
+          prompt:msg,system:sysPr})});
+      const gd=await gasRes.json();
+      if(gd.ok) reply=gd.text;
+      else throw new Error(gd.error||'GASエラー');
+    } else {
+      throw new Error('GAS_URLが未設定です。管理者にお問い合わせください。');
+    }
     chatHist.push({role:'assistant',content:reply});
     const el=document.getElementById(lid);
     if(el){el.querySelector('.ai-bbl').style.whiteSpace='pre-wrap';el.querySelector('.ai-bbl').textContent=reply;}
-  }catch(e){const el=document.getElementById(lid);if(el)el.querySelector('.ai-bbl').textContent='API接続エラー。';}
+  }catch(e){const el=document.getElementById(lid);if(el)el.querySelector('.ai-bbl').textContent='⚠️ '+e.message;}
   btn.disabled=false;btn.textContent='送信';
 }
 function appendMsg(role,content,id){
@@ -2558,11 +2519,21 @@ async function generateReport(){
   out.style.display='block';content.textContent='生成中...';out.scrollIntoView({behavior:'smooth'});
   const prompt=`以下の現場メモを元に正式な${type}を作成してください。\n【実習実施者】${company}\n【実施日】${date}\n【担当監理員】${staff}\n【現場メモ】\n${memo}${issue?'\n【指摘事項】\n'+issue:''}`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:'ARC事業協同組合の監理支援機関として、育成就労法・育成就労制度運用要領（令和8年2月）に基づく正式な巡回報告書・監査報告書を日本語・公文書体で作成します。定期監査は3ヶ月に1回以上の義務があり（法第39条）、帳簿として保存が必要です（法第20条）。指摘事項がある場合は改善期限と根拠条文を明記します。',messages:[{role:'user',content:prompt}]})});
-    const d=await r.json();
-    content.textContent=d.content?.find(b=>b.type==='text')?.text||'エラー';
-  }catch(e){content.textContent='API接続エラー';}
+    let aiText='';
+    if(GAS_URL){
+      const gasRes=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({action:'aiGenerate',token:sessionStorage.getItem('arcana-token')||'',prompt,
+          system:'ARC事業協同組合の監理支援機関として、育成就労法・育成就労制度運用要領（令和8年2月）に基づく正式な巡回報告書・監査報告書を日本語・公文書体で作成します。定期監査は3ヶ月に1回以上の義務があり（法第39条）、帳簿として保存が必要です（法第20条）。指摘事項がある場合は改善期限と根拠条文を明記します。'})});
+      const gasData=await gasRes.json();
+      if(gasData.ok) aiText=gasData.text;
+      else throw new Error(gasData.error||'GASエラー');
+    } else {
+      throw new Error('GAS_URLが未設定です。管理者にお問い合わせください。');
+    }
+    content.textContent=aiText;
+  }catch(e){
+    content.textContent='⚠️ '+e.message;
+  }
   btn.disabled=false;btn.textContent='✨ AIで報告書を生成する';
 }
 function copyReport(){const c=document.getElementById('reportContent');if(c)navigator.clipboard.writeText(c.textContent).then(()=>alert('コピーしました'));}
