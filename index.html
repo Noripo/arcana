@@ -2929,10 +2929,11 @@ function saveReport(){
 
 // 実施者モーダルの巡回・監査報告書タブを描画
 function renderCoReports(){
-  const modal = document.getElementById('mCompanyNew');
-  const companyName = modal?.querySelector('.modal-title')?.textContent?.replace(/🏢\s*/,'').split('（')[0]?.trim() || '';
   const el = document.getElementById('mcoReportsList');
   if(!el) return;
+  // currentCompanyNoから会社名を特定
+  const co = CD.find(c => c.no === currentCompanyNo);
+  const companyName = co?.name || '';
 
   const allReports = JSON.parse(localStorage.getItem('arcana_reports') || '[]');
   const reports = companyName
