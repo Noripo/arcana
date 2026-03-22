@@ -2931,9 +2931,23 @@ function saveReport(){
 function renderCoReports(){
   const el = document.getElementById('mcoReportsList');
   if(!el) return;
-  // currentCompanyNoから会社名を特定
-  const co = CD.find(c => c.no === currentCompanyNo);
-  const companyName = co?.name || '';
+
+  // 会社名を複数の方法で取得
+  let companyName = '';
+  // ① currentCompanyNoから取得
+  if(currentCompanyNo && currentCompanyNo !== 'new'){
+    companyName = CD.find(c => c.no === currentCompanyNo)?.name || '';
+  }
+  // ② モーダルタイトルから取得（フォールバック）
+  if(!companyName){
+    const title = document.querySelector('#mCompanyNew .modal-title')?.textContent || '';
+    const match = title.match(/🏢\s*(.+?)(?:\s*／|\s*\(|$)/);
+    if(match) companyName = match[1].trim();
+  }
+  // ③ 基本情報タブの会社名フィールドから取得（フォールバック）
+  if(!companyName){
+    companyName = document.getElementById('fCoName')?.value || '';
+  }
 
   const allReports = JSON.parse(localStorage.getItem('arcana_reports') || '[]');
   const reports = companyName
