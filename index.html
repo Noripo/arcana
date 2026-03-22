@@ -1319,7 +1319,7 @@ body::before{content:'';position:fixed;inset:0;background:
           <div class="g2">
             <div class="fg"><label class="fl">実習実施者</label>
               <select class="fs" id="aiCompany" onchange="updateAiStaffOptions()">
-                <option>山田食品工業（株）</option><option>鈴木金属工業（株）</option><option>渡辺建設（株）</option>
+                <option value="">— 選択してください —</option>
               </select>
             </div>
             <div class="fg"><label class="fl">報告書の種類</label>
@@ -3891,6 +3891,12 @@ function deleteUser(idx){
 
 // ─── INIT ───
 document.addEventListener('DOMContentLoaded',()=>{
+  // AI報告書の実習実施者selectをCDデータから動的生成
+  const aiCompanySel = document.getElementById('aiCompany');
+  if(aiCompanySel && CD?.length){
+    aiCompanySel.innerHTML = '<option value="">— 選択してください —</option>' +
+      CD.map(co => `<option value="${co.name}">${co.name}</option>`).join('');
+  }
   // ログイン画面にSVGロゴを複製
   const srcLogo=document.querySelector('.logo-mark img');
   const loginMark=document.getElementById('loginLogoMark');
