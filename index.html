@@ -1324,10 +1324,10 @@ body::before{content:'';position:fixed;inset:0;background:
             </div>
             <div class="fg"><label class="fl">報告書の種類</label>
               <select class="fs" id="aiType" onchange="toggleAuditForm()">
-                <option>定期巡回報告書（1号ロ）</option>
-                <option>定期巡回報告書（2号ロ）</option>
-                <option value="監査報告書">定期監査報告書</option>
-                <option>臨時巡回報告書</option>
+                <option value="定期巡回報告書（1号ロ）">定期巡回報告書（1号ロ）</option>
+                <option value="定期巡回報告書（2号ロ）">定期巡回報告書（2号ロ）</option>
+                <option value="定期監査報告書">定期監査報告書</option>
+                <option value="臨時巡回報告書">臨時巡回報告書</option>
               </select>
             </div>
           </div>
@@ -2711,7 +2711,7 @@ function toggleAuditForm(){
   const auditForm = document.getElementById('auditExtraForm');
   const label = document.getElementById('labelKanriOrPatrol');
   if(!auditForm) return;
-  const isAudit = type === '監査報告書' || type?.includes('監査報告書');
+  const isAudit = type === '定期監査報告書' || type?.includes('監査報告書');
   auditForm.style.display = isAudit ? 'block' : 'none';
   // 巡回系は「巡回員」、監査は「監理責任者」
   if(label) label.textContent = isAudit ? '監理責任者' : '巡回員';
@@ -2744,7 +2744,7 @@ async function generateReport(){
   const staff=document.getElementById('aiStaff')?.value;
   if(!memo?.trim()){alert('現場メモを入力してください');return;}
 
-  const isAudit = type === '監査報告書' || type?.includes('監査報告書');
+  const isAudit = type === '定期監査報告書' || type?.includes('監査報告書');
 
   // 監査報告書専用フィールドを取得
   const respPerson   = document.getElementById('aiRespPerson')?.value || '';
