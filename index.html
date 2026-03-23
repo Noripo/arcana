@@ -1685,10 +1685,10 @@ body::before{content:'';position:fixed;inset:0;background:
         <div class="g2"><div class="fg"><label class="fl">TEL</label><input class="fi" style="font-family:var(--mono)"></div><div class="fg"><label class="fl">FAX</label><input class="fi" style="font-family:var(--mono)"></div></div>
         <div class="g2"><div class="fg"><label class="fl">メールアドレス</label><input class="fi" type="email"></div><div class="fg"><label class="fl">請求書送付方法</label><select class="fs"><option>郵送</option><option>メール（PDF）</option><option>郵送＋メール</option></select></div></div>
         <div class="g2"><div class="fg"><label class="fl">実習職種</label><input class="fi"></div><div class="fg"><label class="fl">実習作業名</label><input class="fi"></div></div>
-        <div class="g4"><div class="fg"><label class="fl">技能実習生 1号</label><input type="number" class="fi" placeholder="0"></div><div class="fg"><label class="fl">技能実習生 2号</label><input type="number" class="fi" placeholder="0"></div><div class="fg"><label class="fl">特定技能 1号</label><input type="number" class="fi" placeholder="0"></div><div class="fg"><label class="fl">特定技能 2号</label><input type="number" class="fi" placeholder="0"></div></div>
+        <div class="g4"><div class="fg"><label class="fl">技能実習生 1号</label><input type="number" class="fi" id="mcoT1" placeholder="0" readonly style="background:var(--surface-2,#f9f9f9)"></div><div class="fg"><label class="fl">技能実習生 2号</label><input type="number" class="fi" id="mcoT2" placeholder="0" readonly style="background:var(--surface-2,#f9f9f9)"></div><div class="fg"><label class="fl">技能実習生 3号</label><input type="number" class="fi" id="mcoT3" placeholder="0" readonly style="background:var(--surface-2,#f9f9f9)"></div><div class="fg"><label class="fl">在籍合計</label><input type="number" class="fi" id="mcoTotal" placeholder="0" readonly style="background:var(--surface-2,#f9f9f9);font-weight:700"></div></div>
         <div class="g2">
-          <div class="fg"><label class="fl">入国前（申請中）人数</label><input type="number" class="fi" placeholder="0" min="0"></div>
-          <div class="fg"><label class="fl">監理費 / 人（円・月額）</label><div style="position:relative"><input type="number" class="fi" placeholder="例：25000" min="0" style="padding-right:28px"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:.68rem;color:var(--text-muted);pointer-events:none">円</span></div></div>
+          <div class="fg"><label class="fl">入国前（申請中）人数</label><input type="number" class="fi" id="mcoPre" placeholder="0" readonly style="background:var(--surface-2,#f9f9f9)"></div>
+          <div class="fg"><label class="fl">監理費 / 人（円・月額）</label><div style="position:relative"><input type="number" class="fi" id="mcoFee" placeholder="例：25000" min="0" style="padding-right:28px"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:.68rem;color:var(--text-muted);pointer-events:none">円</span></div></div>
         </div>
         <div class="divider"></div>
         <div class="g2">
@@ -1768,7 +1768,7 @@ body::before{content:'';position:fixed;inset:0;background:
         <div id="mcoDocContent"></div>
       </div>
     </div>
-    <div class="modal-ft"><button class="btn btn-ghost" onclick="closeM('mCompanyNew')">キャンセル</button><button class="btn btn-primary" onclick="closeM('mCompanyNew');alert('登録しました')">登録する</button></div>
+    <div class="modal-ft"><button class="btn btn-ghost" onclick="closeM('mCompanyNew')">キャンセル</button><button class="btn btn-primary" onclick="saveCompanyModal()">登録する</button></div>
   </div>
 </div>
 
@@ -3768,7 +3768,48 @@ function openCompanyModal(companyNo){
   const basicContent = document.getElementById('mco-basic');
   if(basicTab) basicTab.classList.add('active');
   if(basicContent) basicContent.classList.add('active');
+
+  // ── TDから実際の人数を動的セット ──
+  if(c){
+    const trainees = TD.filter(t=>t.company===c.name);
+    const t1  = trainees.filter(t=>t.type==='1号').length;
+    const t2  = trainees.filter(t=>t.type==='2号').length;
+    const t3  = trainees.filter(t=>t.type==='3号').length;
+    const pre = trainees.filter(t=>t.type==='入国前').length;
+    const el = id => document.getElementById(id);
+    if(el('mcoT1'))    el('mcoT1').value    = t1;
+    if(el('mcoT2'))    el('mcoT2').value    = t2;
+    if(el('mcoT3'))    el('mcoT3').value    = t3;
+    if(el('mcoTotal')) el('mcoTotal').value = t1+t2+t3;
+    if(el('mcoPre'))   el('mcoPre').value   = pre;
+    if(el('mcoFee'))   el('mcoFee').value   = c.fee || '';
+  }
+
   openM('mCompanyNew');
+}
+
+function saveCompanyModal(){
+  const co = CD.find(x=>x.no===currentCompanyNo);
+  if(!co){ closeM('mCompanyNew'); return; }
+
+  const get = id => document.getElementById(id)?.value?.trim() || '';
+
+  // 監理費の更新（入力可能フィールド）
+  const newFee = parseInt(get('mcoFee')) || co.fee;
+  if(newFee !== co.fee){
+    co.fee = newFee;
+  }
+
+  // 届出受理番号の更新
+  const notifyNo = get('fCoNotifyNo');
+  if(notifyNo) co.notifyNo = notifyNo;
+
+  // 一覧テーブルと売上を再描画
+  renderCompanyTable(CD);
+  if(document.getElementById('revTbl')?.closest('.inner-content.active')) renderRevenueTab();
+
+  closeM('mCompanyNew');
+  alert(`✅ ${co.name} の情報を保存しました`);
 }
 
 // 「連絡あり」バッジクリック → 業務課からの連絡タブを開く
