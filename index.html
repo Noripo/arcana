@@ -497,7 +497,7 @@ body::before{content:'';position:fixed;inset:0;background:
           <span style="font-size:.72rem;font-weight:700;color:#fff;letter-spacing:.04em">💴 売上</span>
         </div>
         <div style="display:grid;grid-template-columns:1fr">
-          <div class="stat-g"><div class="stat-lbl">売上(税抜)</div><div class="stat-val sv-success" id="dashRevTotal" style="font-size:1.1rem">—</div><div class="stat-note">監理費×在籍人数</div></div>
+          <div class="stat-g"><div class="stat-lbl">売上（税抜）</div><div class="stat-val sv-success" id="dashRevTotal" style="font-size:1.1rem">—</div><div class="stat-note">監理費×在籍人数</div></div>
         </div>
       </div>
 
@@ -1019,7 +1019,7 @@ body::before{content:'';position:fixed;inset:0;background:
     <button class="inner-tab" onclick="switchTab('co','co-other',this)">他組合情報</button>
   </div>
   <div id="co-list" class="inner-content active">
-    <div class="tbl-scroll"><table class="tbl"><thead><tr><th>No.</th><th>会社名</th><th>住所</th><th>TEL</th><th>建設許可</th><th>キャリアアップ</th><th>36協定</th><th>責任者講習</th><th>実習生</th><th>入国前</th><th>センター</th><th>1号</th><th>2号</th><th>合計</th><th>売上(税抜)</th><th></th></tr></thead><tbody id="companyTbl"></tbody><tfoot id="companyTblFoot"></tfoot></table></div>
+    <div class="tbl-scroll"><table class="tbl"><thead><tr><th>No.</th><th>会社名</th><th>住所</th><th>TEL</th><th>建設許可</th><th>キャリアアップ</th><th>36協定</th><th>責任者講習</th><th>実習生</th><th>入国前</th><th>センター</th><th>1号</th><th>2号</th><th>合計</th><th>売上（税抜）</th><th></th></tr></thead><tbody id="companyTbl"></tbody><tfoot id="companyTblFoot"></tfoot></table></div>
   </div>
   <div id="co-revenue" class="inner-content">
     <div class="stats" id="revStats"></div>
@@ -1030,7 +1030,7 @@ body::before{content:'';position:fixed;inset:0;background:
     <div class="panel">
       <div class="panel-head"><span class="panel-title">監理費・人数・売上一覧</span></div>
       <div class="tbl-scroll"><table class="tbl">
-        <thead><tr><th>No.</th><th>会社名</th><th>監理費/人（円）</th><th>入国前</th><th>1号</th><th>2号</th><th>合計人数</th><th>売上(税抜)</th></tr></thead>
+        <thead><tr><th>No.</th><th>会社名</th><th>監理費/人（円）</th><th>入国前</th><th>1号</th><th>2号</th><th>合計人数</th><th>売上（税抜）</th></tr></thead>
         <tbody id="revTbl"></tbody>
         <tfoot id="revFoot" style="background:var(--surface2);font-weight:700"></tfoot>
       </table></div>
@@ -2449,7 +2449,7 @@ function renderCompanyTable(data){
       <td class="fw7" style="color:var(--accent)">${t1Count}</td>
       <td class="fw7" style="color:var(--purple)">${t2Count}</td>
       <td class="fw7">${total}</td>
-      <td class="fw7" style="font-family:var(--mono);color:var(--success);white-space:nowrap">${revenue?fmt(Math.floor(revenue/1.1))+'円':'—'}</td>
+      <td class="fw7" style="font-family:var(--mono);color:var(--success);white-space:nowrap">${revenue?fmt(revenue)+'円':'—'}</td>
       <td style="white-space:nowrap">
         <button class="btn btn-ghost btn-xs" onclick="openCompanyModal('${c.no}')">編集</button>
         <button class="btn btn-ghost btn-xs" onclick="viewCompanyDocs('${c.name}')">書類</button>
@@ -4312,7 +4312,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     return s+(c.fee||0)*cnt;
   },0);
   const el=document.getElementById('dashRevTotal');
-  if(el) el.textContent=Math.floor(totalRev/1.1).toLocaleString('ja-JP')+'円';
+  if(el) el.textContent=totalRev.toLocaleString('ja-JP')+'円';
 
   renderDashInterviewAlerts();
   renderDashAuditAlerts();
