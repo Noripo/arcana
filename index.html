@@ -2823,9 +2823,17 @@ function renderIssues(f='all'){
 
 // ── Gemini API 直接呼び出し（CORSフリー）──
 async function callGemini(prompt, system){
-  // localStorageから最新のキーを取得
+  // GAS経由を優先（キー設定不要）
+  if(GAS_URL){
+    const gasRes = await fetch(GAS_URL, {method:'POST', headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'aiGenerate', token:sessionStorage.getItem('arcana-token')||'', prompt, system})});
+    const gasData = await gasRes.json();
+    if(gasData.ok) return gasData.text;
+    // GASでエラーの場合はlocalStorageのキーで直接試みる
+    console.warn('GAS経由失敗、直接呼び出しを試みます:', gasData.error);
+  }
+  // フォールバック：localStorageのキーで直接呼び出し
   if(!GEMINI_API_KEY) GEMINI_API_KEY = localStorage.getItem('arcana_gemini_key') || '';
-  // Gemini APIキーが設定されている場合は直接呼び出し
   if(GEMINI_API_KEY){
     const fullPrompt = system ? system + '\n\n' + prompt : prompt;
     const res = await fetch(
@@ -2843,15 +2851,7 @@ async function callGemini(prompt, system){
     if(!text) throw new Error('応答が空でした');
     return text;
   }
-  // GAS経由（フォールバック）
-  if(GAS_URL){
-    const gasRes = await fetch(GAS_URL, {method:'POST', headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify({action:'aiGenerate', token:sessionStorage.getItem('arcana-token')||'', prompt, system})});
-    const gasData = await gasRes.json();
-    if(gasData.ok) return gasData.text;
-    throw new Error(gasData.error || 'GASエラー');
-  }
-  throw new Error('Gemini APIキーが設定されていません。右上のユーザーメニュー →「🔑 APIキー設定」から設定してください。');
+  throw new Error('AI機能が利用できません。管理者にお問い合わせください。');
 }
 
 let chatHist=[];
