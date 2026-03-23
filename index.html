@@ -3006,8 +3006,8 @@ function updateAiStaffOptions(){
   const instSel = document.getElementById('aiInstructor');
   if(!respSel || !instSel) return;
 
-  const respName = co?.resp || '（未設定）';
-  const instName = co?.instructor || '（未設定）';
+  const respName = co?.staff || '（未設定）';
+  const instName = co?.instructor || co?.staff || '（未設定）';
 
   respSel.innerHTML = `<option>${respName}</option>`;
   if(co?.resp2) respSel.innerHTML += `<option>${co.resp2}</option>`;
