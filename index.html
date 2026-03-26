@@ -1691,6 +1691,56 @@ body::before{content:'';position:fixed;inset:0;background:
           <div class="fg"><label class="fl">監理費 / 人（円・月額）</label><div style="position:relative"><input type="number" class="fi" id="mcoFee" placeholder="例：25000" min="0" style="padding-right:28px"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:.68rem;color:var(--text-muted);pointer-events:none">円</span></div></div>
         </div>
         <div class="divider"></div>
+        <!-- ▼ 受入可能人数計算ブロック -->
+        <div style="background:var(--surface2,#f0f3f8);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:4px">
+          <div style="font-size:.72rem;font-weight:700;color:var(--text-dim);margin-bottom:10px;display:flex;align-items:center;gap:8px">
+            👥 受入可能人数シミュレーション
+            <span id="mcoSpecialBadge" style="display:none;font-size:.62rem;background:var(--warn,#b45309);color:#fff;border-radius:4px;padding:1px 6px">特例業種</span>
+          </div>
+          <div class="g2" style="margin-bottom:10px">
+            <div class="fg">
+              <label class="fl">常勤職員数</label>
+              <div style="position:relative">
+                <input type="number" class="fi" id="mcoFullTime" placeholder="例：10" min="1" oninput="calcQuota()" style="padding-right:28px">
+                <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:.68rem;color:var(--text-muted);pointer-events:none">人</span>
+              </div>
+            </div>
+            <div class="fg" style="display:flex;align-items:flex-end;padding-bottom:4px">
+              <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--text-dim)">
+                <input type="checkbox" id="mcoYuryou" onchange="calcQuota()" style="width:16px;height:16px;cursor:pointer;accent-color:var(--teal)">
+                優良認定あり
+              </label>
+            </div>
+          </div>
+          <div id="mcoQuotaResult" style="display:none">
+            <div style="font-size:.68rem;color:var(--text-muted);margin-bottom:6px">基本枠：<span id="mcoBaseQuota" style="font-weight:700;color:var(--text)">—</span>人 / 年</div>
+            <div class="g4">
+              <div style="background:var(--surface);border:1.5px solid var(--accent);border-radius:8px;padding:8px 10px;text-align:center">
+                <div style="font-size:.62rem;color:var(--text-muted);margin-bottom:3px">1号</div>
+                <div id="mcoQ1" style="font-size:1.3rem;font-weight:900;color:var(--accent)">—</div>
+                <div style="font-size:.58rem;color:var(--text-muted)">名まで</div>
+              </div>
+              <div style="background:var(--surface);border:1.5px solid var(--teal);border-radius:8px;padding:8px 10px;text-align:center">
+                <div style="font-size:.62rem;color:var(--text-muted);margin-bottom:3px">2号</div>
+                <div id="mcoQ2" style="font-size:1.3rem;font-weight:900;color:var(--teal)">—</div>
+                <div style="font-size:.58rem;color:var(--text-muted)">名まで</div>
+              </div>
+              <div style="background:var(--surface);border:1.5px solid var(--purple);border-radius:8px;padding:8px 10px;text-align:center">
+                <div style="font-size:.62rem;color:var(--text-muted);margin-bottom:3px">3号</div>
+                <div id="mcoQ3" style="font-size:1.3rem;font-weight:900;color:var(--purple)">—</div>
+                <div style="font-size:.58rem;color:var(--text-muted)">名まで</div>
+              </div>
+              <div style="background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;padding:8px 10px;text-align:center">
+                <div style="font-size:.62rem;color:var(--text-muted);margin-bottom:3px">合計上限</div>
+                <div id="mcoQTotal" style="font-size:1.3rem;font-weight:900;color:var(--text)">—</div>
+                <div style="font-size:.58rem;color:var(--text-muted)">名まで</div>
+              </div>
+            </div>
+            <div id="mcoSpecialNote" style="display:none;margin-top:8px;font-size:.68rem;color:var(--warn);background:rgba(180,83,9,.07);border-radius:6px;padding:6px 10px"></div>
+          </div>
+        </div>
+        <!-- ▲ 受入可能人数計算ブロック -->
+        <div class="divider"></div>
         <div class="g2">
           <div class="fg"><label class="fl">転籍前の組合</label><input class="fi" placeholder="例：○○協同組合（転籍の場合のみ）"></div>
           <div class="fg"><label class="fl">変更認定日</label><input type="date" class="fi"></div>
@@ -3785,7 +3835,91 @@ function openCompanyModal(companyNo){
     if(el('mcoFee'))   el('mcoFee').value   = c.fee || '';
   }
 
+  // ── 業種・常勤職員数・優良認定をセット ──
+  const ftEl = document.getElementById('mcoFullTime');
+  const yuEl = document.getElementById('mcoYuryou');
+  if(ftEl) ftEl.value = c?.fullTime || '';
+  if(yuEl) yuEl.checked = c?.yuryou || false;
+  const basicDiv = document.getElementById('mco-basic');
+  if(basicDiv) basicDiv.dataset.job = c?.job || '';
+  const qResult = document.getElementById('mcoQuotaResult');
+  if(c && c.fullTime){ calcQuota(); }
+  else if(qResult) qResult.style.display = 'none';
+
   openM('mCompanyNew');
+}
+
+
+// ── 受入可能人数計算 ──
+function calcQuota(){
+  const ftVal = parseInt(document.getElementById('mcoFullTime')?.value);
+  const yuryou = document.getElementById('mcoYuryou')?.checked || false;
+  const job = document.getElementById('mco-basic')?.dataset?.job || '';
+  const resultDiv = document.getElementById('mcoQuotaResult');
+
+  if(!ftVal || ftVal < 1){
+    if(resultDiv) resultDiv.style.display = 'none';
+    return;
+  }
+
+  // 特例業種判定
+  const specialKeywords = ['建設', '漁業', '造船', '船用工業', '船用'];
+  const isSpecial = specialKeywords.some(kw => job.includes(kw));
+
+  // 基本枠（技能実習法・年間受入枠）
+  function getBaseQuota(ft){
+    if(ft <= 2)  return 1;
+    if(ft <= 5)  return 2;
+    if(ft <= 10) return 3;
+    if(ft <= 20) return 4;
+    if(ft <= 30) return 5;
+    if(ft <= 40) return 6;
+    if(ft <= 50) return 7;
+    return Math.floor(ft / 10);
+  }
+
+  const base = getBaseQuota(ftVal);
+
+  let q1, q2, q3;
+  if(yuryou){
+    q1 = base * 2;
+    q2 = base * 4;
+    q3 = base * 6;
+  } else {
+    q1 = base;
+    q2 = base * 2;
+    q3 = base * 3;
+  }
+
+  // 特例業種の注釈
+  let specialNote = '';
+  if(isSpecial){
+    if(job.includes('建設')){
+      specialNote = '【建設関係】常勤職員数にかかわらず、常時在籍する技能実習生は合計30人以内とする特例があります（小規模事業者向け）。詳細はJAC・監理団体にご確認ください。';
+    } else if(job.includes('漁業')){
+      specialNote = '【漁業関係】漁船漁業は船員数基準が適用される場合があります。詳細は農林水産省・JITCO等にご確認ください。';
+    } else if(job.includes('造船') || job.includes('船用')){
+      specialNote = '【造船・船用工業】業種特性により受入枠の算定に特例がある場合があります。詳細は国土交通省・監理団体にご確認ください。';
+    }
+  }
+
+  // 表示
+  if(resultDiv) resultDiv.style.display = 'block';
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  set('mcoBaseQuota', base);
+  set('mcoQ1', q1);
+  set('mcoQ2', q2);
+  set('mcoQ3', q3);
+  set('mcoQTotal', q1 + q2 + q3);
+
+  const badge = document.getElementById('mcoSpecialBadge');
+  if(badge) badge.style.display = isSpecial ? 'inline-block' : 'none';
+
+  const noteEl = document.getElementById('mcoSpecialNote');
+  if(noteEl){
+    noteEl.style.display = specialNote ? 'block' : 'none';
+    noteEl.textContent = specialNote;
+  }
 }
 
 function saveCompanyModal(){
