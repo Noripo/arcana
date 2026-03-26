@@ -1677,6 +1677,7 @@ body::before{content:'';position:fixed;inset:0;background:
         <button class="inner-tab" onclick="switchTab('mco','mco-docs',this);initCoDocTab()">📁 書類閲覧</button>
         <button class="inner-tab" onclick="switchTab('mco','mco-reports',this);renderCoReports()">📝 巡回・監査報告書</button>
         <button class="inner-tab" onclick="switchTab('mco','mco-notice',this);renderCoNotices()">📋 業務課からの連絡</button>
+        <button class="inner-tab" id="mco-chat-tab" onclick="switchTab('mco','mco-chat',this);openChatTab()">💬 チャット<span id="mco-chat-badge" style="display:none;margin-left:5px;background:var(--danger);color:#fff;border-radius:10px;font-size:.6rem;padding:1px 6px">0</span></button>
       </div>
       <div id="mco-basic" class="inner-content active">
         <div class="fg"><label class="fl">実習実施者届出受理番号</label><input class="fi" id="fCoNotifyNo" style="font-family:var(--mono)" placeholder="例：220011234560101"></div>
@@ -1807,6 +1808,20 @@ body::before{content:'';position:fixed;inset:0;background:
           <!-- 連絡一覧 -->
           <div id="coNoticesList">
             <div class="alert a-info"><span class="alert-icon">ℹ️</span><span>業務課からの連絡はありません。</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="mco-chat" class="inner-content">
+        <div style="display:flex;flex-direction:column;height:460px">
+          <!-- メッセージ一覧 -->
+          <div id="chatMessages" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--surface2)">
+            <div class="alert a-info"><span class="alert-icon">💬</span><span>チャットを読み込んでいます...</span></div>
+          </div>
+          <!-- 入力エリア -->
+          <div style="padding:10px 12px;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:8px;align-items:flex-end">
+            <textarea id="chatInput" class="fta" style="flex:1;min-height:38px;max-height:100px;resize:none;font-size:.85rem;padding:8px 10px" placeholder="メッセージを入力..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage()}"></textarea>
+            <button class="btn btn-primary btn-sm" onclick="sendChatMessage()" style="height:38px;white-space:nowrap">送信</button>
           </div>
         </div>
       </div>
@@ -2088,7 +2103,8 @@ function renderTraineeGrid(data){
   grid.innerHTML=data.map(t=>{
     const d=daysUntil(t.visaExp);
     const urgColor=d<=30?'var(--danger)':d<=90?'var(--warn)':'var(--success)';
-    const photoHtml=t.photo?`<img data-src="${t.photo}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" style="width:100%;height:100%;object-fit:cover;border-radius:7px" class="lazy-img">`:`<span style="font-size:24px">👤</span>`;
+    // 画像はモーダルを開いたときだけ表示。カードは絵文字アバターのみ（軽量化）
+    const photoHtml=`<span style="font-size:24px" title="クリックで写真を表示">👤</span>`;
     const visaInfo=(t.type==='入国前'||!t.visaExp)
       ?`<span class="badge b-orange">●入国前</span>`
       :t.type==='センター'
@@ -3850,6 +3866,170 @@ function openCompanyModal(companyNo){
 }
 
 
+
+// ============================================================
+// チャット機能
+// ============================================================
+const GAS_CHAT_URL = 'https://script.google.com/macros/s/AKfycbzWduYcSVUQ06mdtNf-CJfJxelFsirzcA0EGl3I3nHn_abd-L6hoenHkfQ0leTqoZ6Jtw/exec';
+
+// チャットタブを開いたとき
+function openChatTab() {
+  const companyNo = currentCompanyNo;
+  if (!companyNo || companyNo === 'new') {
+    renderChatMessages([]);
+    return;
+  }
+  loadChatMessages(companyNo);
+}
+
+// メッセージ読み込み
+async function loadChatMessages(companyNo) {
+  const user = currentUser?.id || 'unknown';
+  const msgDiv = document.getElementById('chatMessages');
+  if (msgDiv) msgDiv.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:.8rem;padding:20px">読み込み中...</div>';
+
+  try {
+    const url = GAS_CHAT_URL + '?action=getChat&companyNo=' + encodeURIComponent(companyNo) + '&user=' + encodeURIComponent(user);
+    const resp = await fetch(url);
+    const data = await resp.json();
+    if (data.ok) {
+      renderChatMessages(data.messages, user);
+      // 既読マーク
+      markChatRead(companyNo, user);
+      // バッジ更新
+      updateChatBadge(companyNo, 0);
+    } else {
+      if (msgDiv) msgDiv.innerHTML = '<div class="alert a-warn"><span class="alert-icon">⚠️</span><span>メッセージの取得に失敗しました。</span></div>';
+    }
+  } catch(e) {
+    // GAS未設定時はデモメッセージを表示
+    renderChatMessages(getDemoChatMessages(companyNo), user);
+  }
+}
+
+// デモ用メッセージ（GAS未接続時）
+function getDemoChatMessages(companyNo) {
+  return [
+    { id:'1', companyNo, user:'五十嵐 一弘', role:'staff', message:'本日巡回しました。宿舎の冷蔵庫が1台故障しているとのことです。要対応。', postedAt: new Date(Date.now()-86400000*2).toISOString(), readBy:['五十嵐 一弘','nori'] },
+    { id:'2', companyNo, user:'nori', role:'admin', message:'確認しました。修理業者に連絡します。', postedAt: new Date(Date.now()-86400000).toISOString(), readBy:['nori'] },
+    { id:'3', companyNo, user:'眞下 健人', role:'staff', message:'次回巡回は来週木曜を予定しています。賃金台帳の確認もお願いします。', postedAt: new Date(Date.now()-3600000).toISOString(), readBy:['眞下 健人'] },
+  ];
+}
+
+// チャットメッセージ描画
+function renderChatMessages(messages, currentUserName) {
+  const msgDiv = document.getElementById('chatMessages');
+  if (!msgDiv) return;
+  const user = currentUserName || currentUser?.id || 'unknown';
+
+  if (!messages || messages.length === 0) {
+    msgDiv.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:.8rem;padding:30px">まだメッセージはありません。最初のメッセージを送ってみましょう。</div>';
+    return;
+  }
+
+  msgDiv.innerHTML = messages.map(msg => {
+    const isMine = msg.user === user;
+    const displayName = msg.displayName || msg.user;
+    const time = msg.postedAt ? new Date(msg.postedAt).toLocaleString('ja-JP', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+    const readCount = msg.readBy ? msg.readBy.length : 0;
+    const readLabel = isMine && readCount > 1 ? `<span style="font-size:.6rem;color:var(--text-muted)">既読 ${readCount - 1}</span>` : '';
+
+    if (isMine) {
+      return `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+        <div style="font-size:.65rem;color:var(--text-muted)">${time}</div>
+        <div style="max-width:75%;background:var(--accent);color:#fff;border-radius:14px 14px 2px 14px;padding:8px 12px;font-size:.83rem;line-height:1.5;word-break:break-all">${escHtml(msg.message)}</div>
+        ${readLabel}
+      </div>`;
+    } else {
+      const roleColor = msg.role === 'admin' ? 'var(--danger)' : 'var(--teal)';
+      return `<div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px">
+        <div style="font-size:.65rem;color:var(--text-muted)"><span style="font-weight:700;color:${roleColor}">${escHtml(displayName)}</span>　${time}</div>
+        <div style="max-width:75%;background:var(--surface);border:1px solid var(--border);border-radius:14px 14px 14px 2px;padding:8px 12px;font-size:.83rem;line-height:1.5;word-break:break-all">${escHtml(msg.message)}</div>
+      </div>`;
+    }
+  }).join('');
+
+  // 最下部にスクロール
+  msgDiv.scrollTop = msgDiv.scrollHeight;
+}
+
+// HTMLエスケープ
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+}
+
+// メッセージ送信
+async function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const msg = input?.value?.trim();
+  if (!msg) return;
+
+  const companyNo = currentCompanyNo;
+  const user = currentUser?.id || 'unknown';
+  const role = currentUser?.role || 'staff';
+
+  input.value = '';
+  input.style.height = '';
+
+  try {
+    const resp = await fetch(GAS_CHAT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'postChat', companyNo, user, displayName: currentUser?.name || user, role, message: msg })
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      loadChatMessages(companyNo);
+    }
+  } catch(e) {
+    // GAS未接続時はローカルにデモ表示
+    const msgDiv = document.getElementById('chatMessages');
+    if (msgDiv) {
+      const now = new Date().toISOString();
+      const demoMsg = { id: Date.now().toString(), companyNo, user, role, message: msg, postedAt: now, readBy: [user] };
+      // 既存のデモメッセージに追加
+      const existing = getDemoChatMessages(companyNo);
+      existing.push(demoMsg);
+      renderChatMessages(existing, user);
+    }
+  }
+}
+
+// 既読マーク送信
+async function markChatRead(companyNo, user) {
+  try {
+    await fetch(GAS_CHAT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'markRead', companyNo, user })
+    });
+  } catch(e) { /* GAS未接続時は無視 */ }
+}
+
+// チャットバッジ更新
+function updateChatBadge(companyNo, count) {
+  const badge = document.getElementById('mco-chat-badge');
+  if (!badge) return;
+  if (count > 0) {
+    badge.style.display = 'inline-block';
+    badge.textContent = count;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// 実施者一覧の未読バッジ更新（ページ読み込み時に呼ぶ）
+async function loadChatUnread() {
+  const user = currentUser?.id || 'unknown';
+  try {
+    const url = GAS_CHAT_URL + '?action=getUnread&user=' + encodeURIComponent(user);
+    const resp = await fetch(url);
+    const data = await resp.json();
+    if (data.ok) {
+      window.__chatUnread = data.unread;
+      renderCompanyTable(CD); // テーブル再描画でバッジ反映
+    }
+  } catch(e) { window.__chatUnread = {}; }
+}
+
 // ── 受入可能人数計算 ──
 function calcQuota(){
   const ftVal = parseInt(document.getElementById('mcoFullTime')?.value);
@@ -4175,7 +4355,7 @@ function buildExamDocsSection(){
 // GAS連携設定
 // ================================================================
 // ▼▼▼ デプロイ後にここにURLを貼り付けてください ▼▼▼
-const GAS_URL = '';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzWduYcSVUQ06mdtNf-CJfJxelFsirzcA0EGl3I3nHn_abd-L6hoenHkfQ0leTqoZ6Jtw/exec';
 // Gemini APIキーを直接設定（GAS経由不要）
 // Gemini APIキー（localStorageから読み込み、管理者が設定画面で入力）
 let GEMINI_API_KEY = localStorage.getItem('arcana_gemini_key') || '';
