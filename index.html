@@ -410,6 +410,7 @@ body::before{content:'';position:fixed;inset:0;background:
   </div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="showPage('dash')">📊 ダッシュボード</button>
+    <button class="nav-tab" id="nav-chat" onclick="showPage('chat');initChatPage()">💬 チャット</button>
     <button class="nav-tab" onclick="showPage('companies')">🏢 実習実施者</button>
     <button class="nav-tab" onclick="showPage('trainees')">👤 実習生</button>
     <button class="nav-tab" onclick="showPage('exam')">📝 試験管理</button>
@@ -419,7 +420,6 @@ body::before{content:'';position:fixed;inset:0;background:
     <button class="nav-tab" onclick="showPage('interview')">🗓 面接管理</button>
     <button class="nav-tab" onclick="showPage('followup')">⚡ 指摘フォロー</button>
     <button class="nav-tab" onclick="showPage('ai')">🤖 AI報告書</button>
-    <button class="nav-tab" id="nav-chat" onclick="showPage('chat');initChatPage()">💬 チャット</button>
   </div>
   <div class="flex items-center gap8">
     <span class="alert-pill">要対応 11</span>
@@ -3512,7 +3512,7 @@ function showPage(id){
   document.getElementById('page-'+id)?.classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.mob-btn').forEach(t=>t.classList.remove('active'));
-  const pages=['dash','companies','trainees','exam','application','docs','patrol','interview','followup','ai','chat'];
+  const pages=['dash','chat','companies','trainees','exam','application','docs','patrol','interview','followup','ai'];
   const idx=pages.indexOf(id);
   if(idx>=0)document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
   const mp=['dash','companies','trainees','exam','application','ai','chat'];
