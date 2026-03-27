@@ -4164,6 +4164,7 @@ async function selectChatCompany(companyNo) {
   // 入力エリア表示
   const inputArea = document.getElementById('chatPageInputArea');
   if (inputArea) inputArea.style.display = 'block';
+  window.__chatPageMsgs = []; // 会社切り替え時にキャッシュリセット
 
   // リスト再描画（アクティブ状態更新）
   renderChatCompanyList();
@@ -4195,6 +4196,7 @@ async function loadChatPageMessages() {
     const resp = await fetch(url);
     const data = await resp.json();
     if (data.ok) {
+      window.__chatPageMsgs = data.messages; // キャッシュ更新
       renderChatPageMessages(data.messages, user);
     } else {
       renderChatPageMessages(getDemoChatMessages(chatPageCurrentNo), user);
@@ -4250,7 +4252,22 @@ async function sendChatPageMessage() {
   const role = currentUser?.role || 'staff';
   const displayName = currentUser?.name || user;
   input.value = '';
+  input.style.height = '';
 
+  // ── 即時反映：送信メッセージをすぐ画面に追加 ──
+  const newMsg = {
+    id: Date.now().toString(),
+    companyNo: chatPageCurrentNo,
+    user, displayName, role,
+    message: msg,
+    postedAt: new Date().toISOString(),
+    readBy: [user]
+  };
+  window.__chatPageMsgs = window.__chatPageMsgs || [];
+  window.__chatPageMsgs.push(newMsg);
+  renderChatPageMessages(window.__chatPageMsgs, user);
+
+  // ── バックグラウンドでGASに保存 ──
   try {
     const resp = await fetch(GAS_CHAT_URL, {
       method: 'POST',
@@ -4258,13 +4275,11 @@ async function sendChatPageMessage() {
     });
     const data = await resp.json();
     if (data.ok) {
+      // 保存成功後に最新データを取得して同期
       loadChatPageMessages();
     }
   } catch(e) {
-    // GAS未接続時はローカル表示
-    const existing = getDemoChatMessages(chatPageCurrentNo);
-    existing.push({ id: Date.now().toString(), companyNo: chatPageCurrentNo, user, displayName, role, message: msg, postedAt: new Date().toISOString(), readBy: [user] });
-    renderChatPageMessages(existing, user);
+    // GAS未接続時はローカル表示のまま
   }
 }
 
