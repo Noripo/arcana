@@ -1564,19 +1564,20 @@ body::before{content:'';position:fixed;inset:0;background:
     /* スマホ：縦並び */
     @media(max-width:640px){
       #chat-wrap{flex-direction:column;height:calc(100dvh - 100px)}
-      #chat-list-col{width:100%!important;flex-shrink:0;max-height:120px;border-right:none!important;border-bottom:1px solid var(--border)}
-      #chatCompanyList{display:flex;flex-direction:row;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
-      .chat-co-item{min-width:110px;max-width:140px;flex-shrink:0;border-bottom:none!important;border-right:1px solid var(--border);padding:8px 10px}
-      .chat-co-sub{display:none}
-      #chat-list-head{padding:6px 10px}
+      #chat-list-col{width:100%!important;flex-shrink:0;border-right:none!important;border-bottom:1px solid var(--border);max-height:none}
+      #chatCompanyList{display:none} /* スマホはプルダウンで代替 */
+      #chat-company-select-wrap{display:flex!important}
+      #chat-list-head{padding:8px 12px;display:flex;align-items:center;gap:8px}
       #chatCompanySearch{display:none}
-      #chat-list-title{font-size:.7rem;margin-bottom:3px}
+      #chat-list-title{white-space:nowrap;margin-bottom:0}
       #chat-main-col{flex:1;min-height:0;display:flex;flex-direction:column}
       #chatPageMessages{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
       #chatPageInputArea{flex-shrink:0;position:relative;z-index:10}
       #chatPageInput{font-size:16px!important}
-      .chat-bubble-mine,.chat-bubble-other{max-width:82%!important}
+      .chat-bubble-mine,.chat-bubble-other{max-width:86%!important}
     }
+    /* PC時はプルダウン非表示 */
+    #chat-company-select-wrap{display:none}
     /* 左リスト */
     #chat-list-col{width:220px;flex-shrink:0;display:flex;flex-direction:column;background:var(--surface);border-right:1px solid var(--border)}
     #chat-list-head{padding:14px 14px 10px;border-bottom:1px solid var(--border)}
@@ -1628,6 +1629,11 @@ body::before{content:'';position:fixed;inset:0;background:
     <div id="chat-list-col">
       <div id="chat-list-head">
         <div id="chat-list-title">💬 チャット</div>
+        <div id="chat-company-select-wrap" style="display:none;flex:1">
+          <select id="chatCompanySelect" class="fs" style="width:100%;font-size:.85rem" onchange="selectChatCompany(this.value)">
+            <option value="">— 実施者を選択 —</option>
+          </select>
+        </div>
         <div id="chat-search-wrap">
           <input type="text" id="chatCompanySearch" placeholder="会社名で検索" oninput="renderChatCompanyList(this.value)">
         </div>
@@ -4200,8 +4206,6 @@ function renderChatCompanyList(searchQuery) {
   listEl.innerHTML = sorted.map(c => {
     const u = unread[c.no] || 0;
     const isActive = c.no === chatPageCurrentNo;
-    const bg = companyColor(c.no);
-    const initial = (c.short || c.name).charAt(0);
     return `<div class="chat-co-item${isActive ? ` active` : ``}" onclick="selectChatCompany('${c.no}')">
       <div class="chat-co-info">
         <div class="chat-co-name">${c.short || c.name}</div>
@@ -4210,6 +4214,17 @@ function renderChatCompanyList(searchQuery) {
       ${u > 0 ? `<span class="chat-co-badge">${u}</span>` : ''}
     </div>`;
   }).join('');
+
+  // スマホ用プルダウンも同期更新（CDから自動生成）
+  const sel = document.getElementById('chatCompanySelect');
+  if (sel) {
+    const prev = sel.value;
+    sel.innerHTML = '<option value="">— 実施者を選択 —</option>' +
+      sorted.map(c => {
+        const u = unread[c.no] || 0;
+        return `<option value="${c.no}"${c.no === chatPageCurrentNo ? ' selected' : ''}>${c.short || c.name}${u > 0 ? ' 🔴' + u : ''}</option>`;
+      }).join('');
+  }
 }
 
 // 実施者を選択してチャット表示
@@ -4299,7 +4314,7 @@ function renderChatPageMessages(messages, currentUserName) {
         <div style="display:flex;align-items:flex-end;gap:6px;flex-direction:row-reverse">
           ${makeAvatar(displayName, 30)}
           <div>
-            <div class="chat-bubble-mine">${escHtml(msg.message)}</div>
+            <div class="chat-bubble-mine" style="writing-mode:horizontal-tb!important;direction:ltr!important;text-align:left!important;display:block!important;word-break:break-word">${escHtml(msg.message)}</div>
             <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:3px">
               ${readLabel}
               <span class="chat-time">${time}</span>
@@ -4312,7 +4327,7 @@ function renderChatPageMessages(messages, currentUserName) {
         ${makeAvatar(displayName, 30)}
         <div class="chat-row-other-body">
           <div class="chat-name-label">${escHtml(displayName)}</div>
-          <div class="chat-bubble-other">${escHtml(msg.message)}</div>
+          <div class="chat-bubble-other" style="writing-mode:horizontal-tb!important;direction:ltr!important;text-align:left!important;display:block!important;word-break:break-word">${escHtml(msg.message)}</div>
           <span class="chat-time">${time}</span>
         </div>
       </div>`;
