@@ -3994,7 +3994,7 @@ function renderChatMessages(messages, currentUserName) {
 
     if (isMine) {
       return `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
-        <div style="font-size:.65rem;color:var(--text-muted)">${time}</div>
+        <div style="font-size:.65rem;color:var(--text-muted)"><span style="font-weight:700;color:var(--accent)">${escHtml(displayName)}</span>　${time}</div>
         <div style="max-width:75%;background:var(--accent);color:#fff;border-radius:14px 14px 2px 14px;padding:8px 12px;font-size:.83rem;line-height:1.5;word-break:break-all">${escHtml(msg.message)}</div>
         ${readLabel}
       </div>`;
@@ -4224,7 +4224,7 @@ function renderChatPageMessages(messages, currentUserName) {
 
     if (isMine) {
       return `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
-        <div style="font-size:.65rem;color:var(--text-muted)">${time}</div>
+        <div style="font-size:.65rem;color:var(--text-muted)"><span style="font-weight:700;color:var(--accent)">${escHtml(displayName)}</span>　${time}</div>
         <div style="max-width:70%;background:var(--accent);color:#fff;border-radius:14px 14px 2px 14px;padding:8px 12px;font-size:.84rem;line-height:1.55;word-break:break-all">${escHtml(msg.message)}</div>
         ${readLabel}
       </div>`;
