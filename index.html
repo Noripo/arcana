@@ -1563,8 +1563,9 @@ body::before{content:'';position:fixed;inset:0;background:
 
     <!-- 左：実施者リスト -->
     <div style="width:240px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--surface)">
-      <div style="padding:12px 14px;border-bottom:1px solid var(--border);font-size:.75rem;font-weight:700;color:var(--text-dim)">
-        💬 チャット
+      <div style="padding:10px 12px;border-bottom:1px solid var(--border)">
+        <div style="font-size:.75rem;font-weight:700;color:var(--text-dim);margin-bottom:7px">💬 チャット</div>
+        <input type="text" id="chatCompanySearch" class="fi" placeholder="🔍 会社名で検索" style="font-size:.75rem;padding:5px 8px;width:100%;box-sizing:border-box" oninput="renderChatCompanyList(this.value)">
       </div>
       <div id="chatCompanyList" style="flex:1;overflow-y:auto">
         <!-- 実施者リストがここに描画される -->
@@ -3946,7 +3947,7 @@ async function loadChatMessages(companyNo) {
   if (msgDiv) msgDiv.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:.8rem;padding:20px">読み込み中...</div>';
 
   try {
-    const url = GAS_CHAT_URL + '?action=getChat&companyNo=' + encodeURIComponent(companyNo) + '&user=' + encodeURIComponent(user);
+    const url = GAS_CHAT_URL + '?action=getChat&token=' + encodeURIComponent(sessionStorage.getItem('arcana-token')||'') + '&companyNo=' + encodeURIComponent(companyNo) + '&user=' + encodeURIComponent(user);
     const resp = await fetch(url);
     const data = await resp.json();
     if (data.ok) {
@@ -4056,7 +4057,7 @@ async function markChatRead(companyNo, user) {
   try {
     await fetch(GAS_CHAT_URL, {
       method: 'POST',
-      body: JSON.stringify({ action: 'markRead', companyNo, user })
+      body: JSON.stringify({ action: 'markRead', token: sessionStorage.getItem('arcana-token')||'', companyNo, user })
     });
   } catch(e) { /* GAS未接続時は無視 */ }
 }
@@ -4077,7 +4078,7 @@ function updateChatBadge(companyNo, count) {
 async function loadChatUnread() {
   const user = currentUser?.id || 'unknown';
   try {
-    const url = GAS_CHAT_URL + '?action=getUnread&user=' + encodeURIComponent(user);
+    const url = GAS_CHAT_URL + '?action=getUnread&token=' + encodeURIComponent(sessionStorage.getItem('arcana-token')||'') + '&user=' + encodeURIComponent(user);
     const resp = await fetch(url);
     const data = await resp.json();
     if (data.ok) {
@@ -4100,7 +4101,7 @@ async function initChatPage() {
   // 未読情報を取得してリスト更新
   const user = currentUser?.id || 'unknown';
   try {
-    const resp = await fetch(GAS_CHAT_URL + '?action=getUnread&user=' + encodeURIComponent(user));
+    const resp = await fetch(GAS_CHAT_URL + '?action=getUnread&token=' + encodeURIComponent(sessionStorage.getItem('arcana-token')||'') + '&user=' + encodeURIComponent(user));
     const data = await resp.json();
     if (data.ok) {
       window.__chatUnread = data.unread || {};
@@ -4112,13 +4113,17 @@ async function initChatPage() {
 }
 
 // 実施者リスト描画
-function renderChatCompanyList() {
+function renderChatCompanyList(searchQuery) {
   const listEl = document.getElementById('chatCompanyList');
   if (!listEl) return;
   const unread = window.__chatUnread || {};
+  const q = (searchQuery || document.getElementById('chatCompanySearch')?.value || '').trim().toLowerCase();
+
+  // 検索フィルタ
+  const filtered = q ? CD.filter(c => c.name.toLowerCase().includes(q) || (c.short||'').toLowerCase().includes(q) || c.no.toLowerCase().includes(q)) : CD;
 
   // 未読件数でソート（未読あり → 上）、同じなら社名順
-  const sorted = [...CD].sort((a, b) => {
+  const sorted = [...filtered].sort((a, b) => {
     const ua = unread[a.no] || 0;
     const ub = unread[b.no] || 0;
     if (ub !== ua) return ub - ua; // 未読多い方が上
@@ -4186,7 +4191,7 @@ async function loadChatPageMessages() {
   msgEl.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:.8rem;padding:20px">読み込み中...</div>';
 
   try {
-    const url = GAS_CHAT_URL + '?action=getChat&companyNo=' + encodeURIComponent(chatPageCurrentNo) + '&user=' + encodeURIComponent(user);
+    const url = GAS_CHAT_URL + '?action=getChat&token=' + encodeURIComponent(sessionStorage.getItem('arcana-token')||'') + '&companyNo=' + encodeURIComponent(chatPageCurrentNo) + '&user=' + encodeURIComponent(user);
     const resp = await fetch(url);
     const data = await resp.json();
     if (data.ok) {
@@ -4249,7 +4254,7 @@ async function sendChatPageMessage() {
   try {
     const resp = await fetch(GAS_CHAT_URL, {
       method: 'POST',
-      body: JSON.stringify({ action: 'postChat', companyNo: chatPageCurrentNo, user, displayName, role, message: msg })
+      body: JSON.stringify({ action: 'postChat', token: sessionStorage.getItem('arcana-token')||'', companyNo: chatPageCurrentNo, user, displayName, role, message: msg })
     });
     const data = await resp.json();
     if (data.ok) {
