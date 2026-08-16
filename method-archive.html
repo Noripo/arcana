@@ -46,7 +46,12 @@ section.view{padding-top:26px}
 .lead{color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.8}
 
 /* matrix */
-.matrix{position:relative;background:var(--panel);border:1px solid var(--line);aspect-ratio:1/1;max-height:520px;margin-bottom:10px}
+.mapscroll{width:100vw;margin-left:calc(50% - 50vw);overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding:0 18px 6px;scrollbar-width:thin}
+.mapinner{min-width:760px;max-width:1120px;margin:0 auto}
+@media(min-width:820px){.mapscroll{padding:0 24px 6px}.mapinner{min-width:0}}
+.matrix{position:relative;background:var(--panel);border:1px solid var(--line);aspect-ratio:16/11;max-height:600px;margin-bottom:6px}
+.maphint{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;color:var(--muted);margin-bottom:16px}
+@media(min-width:820px){.maphint{display:none}}
 .matrix .axis{position:absolute;background:var(--line)}
 .matrix .ax-v{left:50%;top:0;bottom:0;width:1px}
 .matrix .ax-h{top:50%;left:0;right:0;height:1px}
@@ -55,9 +60,13 @@ section.view{padding-top:26px}
 .al-b{bottom:7px;left:50%;transform:translateX(-50%)}
 .al-l{left:7px;top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:left center}
 .al-r{right:7px;top:50%;transform:translateY(-50%) rotate(90deg);transform-origin:right center}
-.dot{position:absolute;transform:translate(-50%,-50%);cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent}
-.dot b{display:block;width:11px;height:11px;border-radius:50%;margin:0 auto 3px;background:var(--ink)}
-.dot span{font-size:10px;line-height:1.3;color:var(--ink);white-space:nowrap;background:rgba(255,255,255,.8);padding:0 2px}
+.dot{position:absolute;transform:translate(-50%,-50%);cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent;width:0}
+.dot b{display:block;width:10px;height:10px;border-radius:50%;margin:0 auto;background:var(--ink)}
+.dot span{position:absolute;left:50%;top:9px;transform:translateX(-50%);font-size:10px;line-height:1.25;color:var(--ink);white-space:nowrap;
+ text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff,0 0 2px #fff;pointer-events:none}
+.dot.up span{top:auto;bottom:9px}
+.dot.hidelabel span{display:none}
+.dot.hidelabel:hover span,.dot.hidelabel:focus span{display:block;background:var(--panel);border:1px solid var(--line);padding:1px 4px;z-index:5}
 .dot.stub{opacity:.34}
 .dot.stub b{background:#fff;border:1.5px solid var(--muted)}
 .dot:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
@@ -2369,16 +2378,47 @@ function render(){
   if(view.startsWith("p:")) return renderPerson(view.slice(2));
 }
 
+function delabelOverlaps(){
+  const box=document.getElementById("mx"); if(!box) return;
+  const dots=[...box.querySelectorAll(".dot")];
+  dots.forEach(d=>{ d.classList.remove("up","hidelabel"); });
+  // 上下に振り分け：同じ縦位置に近いものは交互に上へ
+  const placed=[];
+  const inter=(a,b)=>!(a.right<b.left-2||a.left>b.right+2||a.bottom<b.top-1||a.top>b.bottom+1);
+  // 収録済みを優先して配置（stubは後回し＝重なったら消える）
+  const order=dots.slice().sort((a,b)=>{
+    const sa=a.classList.contains("stub")?1:0, sb=b.classList.contains("stub")?1:0;
+    if(sa!==sb) return sa-sb;
+    return a.getBoundingClientRect().top-b.getBoundingClientRect().top;
+  });
+  order.forEach(d=>{
+    const sp=d.querySelector("span"); if(!sp) return;
+    let r=sp.getBoundingClientRect();
+    if(placed.some(q=>inter(r,q))){
+      d.classList.add("up");
+      r=sp.getBoundingClientRect();
+      if(placed.some(q=>inter(r,q))){ d.classList.add("hidelabel"); return; }
+    }
+    placed.push(sp.getBoundingClientRect());
+  });
+}
 function renderMap(){
   app.innerHTML = '<section class="view"><div class="hd"><span class="tag">MAP</span><h2>勝ち筋の座標</h2></div>'+
    '<p class="lead">縦軸は強みの出どころ、横軸は構えの向き。分野が違っても同じ座標に置けます。<br>自分の現在地を決めてから、隣か対角の人を選ぶと効きます。位置づけは公開情報からの編集判断です。</p>'+
+   '<div class="mapscroll"><div class="mapinner">'+
    '<div class="matrix" id="mx">'+
    '<div class="axis ax-v"></div><div class="axis ax-h"></div>'+
    '<div class="albl al-t">体系・仕組みで立つ</div><div class="albl al-b">個の技量で立つ</div>'+
    '<div class="albl al-l">守り・積み上げ</div><div class="albl al-r">攻め・賭け</div>'+
-   DATA.map(p=>'<button class="dot '+(p.status==="stub"?"stub":"")+'" style="left:'+p.x+'%;top:'+(100-p.y)+'%" data-id="'+p.id+'"><b style="background:'+(p.accent||"")+'"></b><span>'+esc(p.name.replace(" ",""))+'</span></button>').join("")+
-   '</div></section>';
+   DATA.map(p=>'<button class="dot '+(p.status==="stub"?"stub":"")+'" style="left:'+p.x+'%;top:'+(100-p.y)+'%" data-id="'+p.id+'" title="'+esc(p.name)+'"><b style="background:'+(p.accent||"")+'"></b><span>'+esc(p.name.replace(/\s/g,""))+'</span></button>')
+     .join("")+
+   '</div></div></div>'+
+   '<div class="maphint">← 横にスクロールできます →</div>'+
+   '</section>';
   document.querySelectorAll(".dot").forEach(d=>d.addEventListener("click",()=>go(d.dataset.id)));
+  requestAnimationFrame(delabelOverlaps);
+  if(!window.__mapResizeBound){ window.__mapResizeBound=true;
+    window.addEventListener("resize",()=>{ if(view==="map") requestAnimationFrame(delabelOverlaps); }); }
 }
 
 function renderList(){
