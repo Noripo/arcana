@@ -46,9 +46,9 @@ section.view{padding-top:26px}
 .lead{color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.8}
 
 /* matrix */
-.mapscroll{width:100vw;margin-left:calc(50% - 50vw);overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding:0 18px 6px;scrollbar-width:thin}
+.mapscroll{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);width:auto;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding:0 18px 6px;scrollbar-width:thin}
 .mapinner{min-width:760px;max-width:1120px;margin:0 auto}
-@media(min-width:820px){.mapscroll{padding:0 24px 6px}.mapinner{min-width:0}}
+@media(min-width:820px){.mapscroll{padding:0 24px 6px}.mapinner{min-width:0;width:100%}}
 .matrix{position:relative;background:var(--panel);border:1px solid var(--line);aspect-ratio:16/11;max-height:600px;margin-bottom:6px}
 .maphint{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;color:var(--muted);margin-bottom:16px}
 @media(min-width:820px){.maphint{display:none}}
@@ -2416,7 +2416,11 @@ function renderMap(){
    '<div class="maphint">← 横にスクロールできます →</div>'+
    '</section>';
   document.querySelectorAll(".dot").forEach(d=>d.addEventListener("click",()=>go(d.dataset.id)));
-  requestAnimationFrame(delabelOverlaps);
+  requestAnimationFrame(()=>{
+    delabelOverlaps();
+    const sc=document.querySelector(".mapscroll");
+    if(sc && sc.scrollWidth>sc.clientWidth) sc.scrollLeft=(sc.scrollWidth-sc.clientWidth)/2;
+  });
   if(!window.__mapResizeBound){ window.__mapResizeBound=true;
     window.addEventListener("resize",()=>{ if(view==="map") requestAnimationFrame(delabelOverlaps); }); }
 }
