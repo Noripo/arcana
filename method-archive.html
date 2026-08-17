@@ -300,6 +300,13 @@ section.view{padding-top:26px}
 .dt-head .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:9px}
 .dt-head .meta span.tag2{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.1em;padding:3px 9px;border:1px solid #4E5C55;color:#C4CCC7}
 .dt-head .meta span.age{color:#fff;border-color:#7E938A}
+/* links in tt */
+.tt .ct a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:1px;word-break:break-word}
+.tt .ct a:hover{background:var(--bg)}
+.tt .ct .lnk{display:block;margin-top:6px}
+.tt .ct .lnk a{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.02em;border:1px solid var(--line);border-bottom-color:var(--line);padding:6px 11px;margin:3px 6px 3px 0;background:var(--bg)}
+.tt .ct .lnk a:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.searchq{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:11.5px;background:var(--bg);border:1px dashed var(--line);padding:4px 9px;margin:3px 6px 3px 0}
 /* today */
 .today{background:var(--panel);border:1px solid var(--line);padding:18px;margin-bottom:14px}
 .today .who{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;color:var(--muted)}
@@ -3076,10 +3083,19 @@ function renderDesign(){
   '<div class="sec2"><span>SPRINT</span>英語 短期集中（2026年9月〜11月）</div>'+
   '<p class="lead" style="margin-top:10px">パキスタン実習生の受入に伴う3か月の期間限定設計。教材より、実際の話し方に慣れることを優先します。</p>'+
   '<div class="tt">'+
-  '<div class="row2"><div class="tm">週1-2</div><div class="ct">VOA Learning English<small>ゆっくり・語彙限定。最初の2週間はここから耳を作る。</small></div></div>'+
-  '<div class="row2"><div class="tm">週3-8</div><div class="ct">BBC Learning English「6 Minute English」<small>1本6分で移動時間に収まる。英国系の発音は、パキスタンの学校英語に近い。</small></div></div>'+
-  '<div class="row2 core"><div class="tm">週3-12</div><div class="ct">南アジア英語に耳を慣らす<small>YouTubeで Pakistani English interview / Urdu English conversation などを検索。⭐️ここが最も効く。学校で習った米語とかなり違うので、初日の負担が変わる。</small></div></div>'+
-  '<div class="row2"><div class="tm">毎週</div><div class="ct">面談フレーズを声に出す<small>安全確認・体調確認・相談の促し。聞けるだけでは会話にならない。</small></div></div>'+
+  '<div class="row2"><div class="tm">週1-2</div><div class="ct">VOA Learning English ／ Let\'s Learn English<small>アメリカ人英語教師が初級者向けに設計した52週のコース。ゆっくりで語彙も限定されている。最初の2週間はここで耳を作る。</small>'+
+    '<span class="lnk"><a href="https://www.youtube.com/playlist?list=PLd9hCvj34W5it4a-RMzhlwNJ-edf5HU3Q" target="_blank" rel="noopener">▶ Level 1 プレイリスト</a>'+
+    '<a href="https://www.youtube.com/playlist?list=PLgpldqsU4so25PpyNqqVUJlzYsmiWSNnU" target="_blank" rel="noopener">▶ Level 2 プレイリスト</a>'+
+    '<a href="https://learningenglish.voanews.com/p/5644.html" target="_blank" rel="noopener">公式サイト（教材・ワークシート）</a></span></div></div>'+
+  '<div class="row2"><div class="tm">週3-8</div><div class="ct">BBC Learning English ／ 6 Minute English<small>毎週木曜更新の看板シリーズ。1本6分なので、移動15〜30分で2〜4本入る。英国系の発音は、パキスタンの学校英語に比較的近い。</small>'+
+    '<span class="lnk"><a href="https://www.youtube.com/playlist?list=PLcetZ6gSk96-FECmH9l7Vlx5VDigvgZpt" target="_blank" rel="noopener">▶ 6 Minute English プレイリスト</a>'+
+    '<a href="https://www.youtube.com/@bbclearningenglish" target="_blank" rel="noopener">チャンネル全体</a></span></div></div>'+
+  '<div class="row2 core"><div class="tm">週3-12</div><div class="ct">⭐️南アジア英語に耳を慣らす<small>ここが最も効く。学校で習った米語とかなり違うので、慣れておくと初日の負担が変わる。ただし南アジア英語は学習者向けにまとまったチャンネルが存在しない（教材は基本的に米英の発音で作られているため）。検索して実物に当たるのが唯一の方法。とくに現地の英語ニュース番組は、話者が明瞭かつ特徴が揃っていて教材として優秀。</small>'+
+    '<span class="lnk"><a href="https://www.youtube.com/results?search_query=Pakistani+English+news" target="_blank" rel="noopener">▶ Pakistani English news</a>'+
+    '<a href="https://www.youtube.com/results?search_query=Pakistani+English+interview" target="_blank" rel="noopener">▶ Pakistani English interview</a>'+
+    '<a href="https://www.youtube.com/results?search_query=Pakistan+business+English+conversation" target="_blank" rel="noopener">▶ business English conversation</a>'+
+    '<a href="https://www.youtube.com/results?search_query=Urdu+English+code+switching" target="_blank" rel="noopener">▶ Urdu English code switching</a></span></div></div>'+
+  '<div class="row2"><div class="tm">毎週</div><div class="ct">面談フレーズを声に出す<small>安全確認・体調確認・相談の促し。聞けるだけでは会話にならない。実習生の出身地域が分かれば、訛りをさらに絞り込める（パンジャーブ州とシンド州でも違う）。</small></div></div>'+
   '</div>'+
   '<div class="warnbox"><b>語学より優先度が高いもの。</b><br>① 初回面談の通訳確保。3か月であなたの英語が実務レベルに達する保証はない。安全に関わる話を、語学力の限界で取りこぼすリスクがある。<br>② 英語の面談定型フレーズ集（安全確認・体調確認・相談の促し）。<br>③ ARCANAの多言語FAQに英語版を追加。<br><br>⚠️<b>言葉が通じないことの負担を、実習生側に負わせない。</b>これは縁道の原理そのもの——交渉力の弱い側が、強い側の都合を負担する構造を作らない。3か月の学習は自分のためであって、実習生を待たせる理由にはならない。</div>'+
   '<div class="sec2"><span>PART 4 ／ TRACK</span>今日の実行</div>'+
