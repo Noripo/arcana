@@ -294,6 +294,12 @@ section.view{padding-top:26px}
 .calc .verdict.ng{border-left-color:#D8674F}
 .brk{background:var(--panel);border:1px solid var(--line);border-left:3px solid #C0392B;padding:14px 16px}
 .brk li{margin-left:1.15em;font-size:14.5px;line-height:1.85;margin-bottom:6px}
+/* ctype badge */
+.ct-badge{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;padding:2px 7px;border:1px solid currentColor;margin-right:6px;vertical-align:2px}
+.ct-創業{color:#1D6F4A}.ct-承継{color:#8A5A18}.ct-内部登用・招聘{color:#2A5B8C}.ct-非経営者{color:#6B6B7A}
+.dt-head .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:9px}
+.dt-head .meta span.tag2{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.1em;padding:3px 9px;border:1px solid #4E5C55;color:#C4CCC7}
+.dt-head .meta span.age{color:#fff;border-color:#7E938A}
 /* today */
 .today{background:var(--panel);border:1px solid var(--line);padding:18px;margin-bottom:14px}
 .today .who{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;color:var(--muted)}
@@ -354,6 +360,7 @@ section.view{padding-top:26px}
 const DATA = [
 {
  id:"tanaka", name:"田中 邦裕", roma:"TANAKA KUNIHIRO",
+ ctype:"創業", born:1978,
  role:"さくらインターネット 代表取締役社長", company:"さくらインターネット",
  since:1996, sector:"インフラ", gen:"第1世代", accent:"#D0356B", x:38, y:78, status:"filled",
  essay:"この人の凄みは、成功譚ではなく<b>2000年に自分から社長を降りた記録</b>のほうにある。上場が組織の目的になっていくのを見て、肩書きより動機を優先した。その7年後に債務超過で戻ってくるのだから、判断としては一貫している。\nあなたに効くのは「合意のない期待を持たない」。6人チームで、あなたが勝手に期待していることを1人1つ書き出してみてほしい。合意していないものは、やめるか口に出すかの二択しかない。多国籍の現場ではここが摩擦の主因になる。",
@@ -387,6 +394,7 @@ const DATA = [
 },
 {
  id:"yamada", name:"山田 進太郎", roma:"YAMADA SHINTARO",
+ ctype:"創業", born:1977,
  role:"メルカリ 創業者・代表執行役CEO", company:"メルカリ",
  since:2001, sector:"C2C／マーケットプレイス", gen:"第2世代", accent:"#E03A2F", x:82, y:70, status:"filled",
  essay:"米国事業の総括が全収録者で最も痛い。<b>「次の月には良くなるはず」と考え、ダイナミックな変更ではなくある種のカイゼンになっていた</b>——伸びない事業を改善で延命する状態を、当事者がここまで正確に言語化した例は他にない。\nそして総括がいつも「臆病すぎた」であること。失敗の原因を「やりすぎ」に求めがちな我々とは逆向きだ。3ヶ月横ばいの施策に改善禁止の札を貼る、というのは今日から実行できる。",
@@ -420,6 +428,7 @@ const DATA = [
 },
 {
  id:"fujita", name:"藤田 晋", roma:"FUJITA SUSUMU",
+ ctype:"創業", born:1973,
  role:"サイバーエージェント 創業者・代表取締役会長", company:"サイバーエージェント",
  since:1998, sector:"広告／メディア", gen:"第1世代", accent:"#0E7C4A", x:52, y:34, status:"filled",
  essay:"27人が「攻めろ」と言うなかで、この人だけが<b>我慢を戦術として計上している</b>。押しっぱなしは事故り、引きっぱなしは負ける。だから押し引きログという別UIを与えた。\n承継の設計も特異で、16人の候補を4年かけて絞り、会長として伴走しながら渡していく。永守重信と鈴木敏文の顛末と並べて読むと、この差が何を生むかがはっきりする。降り方の設計は、実は最も高度な経営技術かもしれない。",
@@ -455,6 +464,7 @@ const DATA = [
 /* ---- 以下は候補（未収録）。年次・肩書きは要検証のうえ収録する ---- */
 {
  id:"mikitani", name:"三木谷 浩史", roma:"MIKITANI HIROSHI",
+ ctype:"創業", born:1965,
  role:"楽天グループ 代表取締役会長兼社長", company:"楽天グループ",
  since:1997, sector:"EC／金融／通信", gen:"第1世代", accent:"#BF0000", x:94, y:66, status:"filled",
  essay:"動機が野心ではなく死生観から来ている。<b>震災で親族を失い、人生は一回限りだと悟った1週間後に起業を決意している</b>。「迷ったらやる」の重みが他の64人と違うのはそのためだ。\nただし2025年に通期黒字化した直後、2026年度に2000億円強を追加投資すると宣言した判断は、資本力があって初めて成立する。学ぶべきは張り方ではなく、公約を数字と期限で外に出して退路を断つやり方のほう。",
@@ -489,6 +499,7 @@ const DATA = [
 },
 {
  id:"son", name:"孫 正義", roma:"SON MASAYOSHI",
+ ctype:"創業", born:1957,
  role:"ソフトバンクグループ 代表取締役会長兼社長執行役員・CEO", company:"ソフトバンクグループ",
  since:1981, sector:"投資／通信／AI", gen:"第0世代", accent:"#8A8FA3", x:96, y:30, status:"filled",
  essay:"このアーカイブで唯一、<b>振れ幅そのものが型になっている</b>人。同じ時期にアリババという最大の成功と、資産の大半を失う最大の損失を同時に作った。\n収録にあたって最も迷ったのがこの人で、⚠️を2箇所つけた。集中への社内の疑問をたびたび一蹴し、側近が話題を持ち出さなくなったと報じられているからだ。青野慶久の質問責任とちょうど正反対で、どちらを選ぶかは組織の設計思想そのものになる。",
@@ -522,6 +533,7 @@ const DATA = [
 },
 {
  id:"nanba", name:"南場 智子", roma:"NAMBA TOMOKO",
+ ctype:"創業", born:1962,
  role:"DeNA ファウンダー・代表取締役社長兼CEO", company:"DeNA",
  since:1999, sector:"ゲーム／スポーツ／ヘルスケア", gen:"第1世代", accent:"#0F8A8A", x:78, y:66, status:"filled",
  essay:"創業期を自ら<b>「失敗のフルコースを片っ端から経験した」</b>と書いた人。上場企業の創業者が、ここまで不格好さを前面に出した記録は珍しい。\n注目すべきは辞め方と戻り方の両方を会社側の都合で決めていること。私物化しないために辞める準備をしていた人が、15年後に「会社を作り直す」と言って戻ってくる。退く準備と戻る覚悟を同じ引き出しに入れておく、という発想はあなたの2030年構想にも効く。",
@@ -556,6 +568,7 @@ const DATA = [
 },
 {
  id:"aono", name:"青野 慶久", roma:"AONO YOSHIHISA",
+ ctype:"創業", born:1971,
  role:"サイボウズ 代表取締役社長", company:"サイボウズ",
  since:1997, sector:"SaaS／グループウェア", gen:"第1世代", accent:"#1B6FB5", x:58, y:95, status:"filled",
  essay:"2005年の谷が深い。<b>83人中23人が社長就任1年以内に退職し、離職率28%。役員に泣きついたら「こんなぐちゃぐちゃな状態で離れるのか」と返された。</b>\nそこからの回復手順が独特で、原因ではなく前提を疑った。退職理由が全員違うと気づいて、画一ルールそのものを捨てている。多国籍・多世代のチームを持つあなたには、この「平均値を出した瞬間に誰にも効かない対策になる」という洞察がそのまま使える。",
@@ -590,6 +603,7 @@ const DATA = [
 },
 {
  id:"kumagai", name:"熊谷 正寿", roma:"KUMAGAI MASATOSHI",
+ ctype:"創業", born:1963,
  role:"GMOインターネットグループ 代表取締役グループ代表", company:"GMOインターネットグループ",
  since:1991, sector:"ネットインフラ／金融／AI", gen:"第0世代", accent:"#0B3E8C", x:86, y:50, status:"filled",
  essay:"三度の巨額損失を出しながらグループを拡大し続けた。<b>私財の売却、消費者金融事業で約400億円、マイニング撤退</b>——それでも本業のインフラ事業は手放していない。攻めの資金と生存の基盤を分けているからだ。\nそして2026年、自分の判断基準をAIに学習させて社内に配備し、代表自らCAIOを兼務している。80歳を超えて、経営の属人化をAIで解こうとしている。あなたがARCANAでやろうとしていることの先例。",
@@ -624,6 +638,7 @@ const DATA = [
 },
 {
  id:"takashima", name:"髙島 宏平", roma:"TAKASHIMA KOHEI",
+ ctype:"創業", born:1973,
  role:"オイシックス・ラ・大地 代表取締役社長", company:"オイシックス・ラ・大地",
  since:2000, sector:"食品EC／サブスク", gen:"第1世代", accent:"#8A6A3B", x:48, y:64, status:"filled",
  essay:"⭐️のつかない項目だが、この人の「状況は選べないが、課題に取り組む姿勢は選べる」は最も汎用性が高い。制度変更も人手不足も選べない。選べるのは、来る前に準備するか、来てから慌てるかだけだ。\nもうひとつ、<b>ほとんどのVCに断られた局面で1社が出してくれた</b>という記憶を持ち続けていること。苦しいときの支援者を、条件ではなく出してくれた事実で評価する。この姿勢が20年以上の関係を作っている。",
@@ -656,6 +671,7 @@ const DATA = [
 },
 {
  id:"izumo", name:"出雲 充", roma:"IZUMO MITSURU",
+ ctype:"創業", born:1980,
  role:"ユーグレナ 代表取締役社長", company:"ユーグレナ",
  since:2005, sector:"バイオ／ヘルスケア", gen:"第2世代", accent:"#86B300", x:44, y:20, status:"filled",
  essay:"<b>99%不可能なことでも459回挑戦すれば成功確率は99%を超える</b>——この計算を実際に著書で示し、500社に断られてから501社目で道が開けた人。母数を設計してから動く、という発想の完成形。\nただし本当の学びは直近にある。バイオ燃料への投資で長く赤字を出し続けたあと、選択と集中と希望退職まで踏み込んで2年で約46億円改善させた。理想を掲げる事業ほど、いつまで赤字を許すかを先に決めておく必要がある。",
@@ -691,6 +707,7 @@ const DATA = [
 },
 {
  id:"naito", name:"内藤 裕紀", roma:"NAITO YUKI",
+ ctype:"創業", born:1978,
  role:"ドリコム 代表取締役社長", company:"ドリコム",
  since:2001, sector:"ゲーム／メディア", gen:"第2世代", accent:"#5C6B2F", x:60, y:40, status:"filled",
  essay:"「これはイケると思ったのに、全然イケなかった」と笑って語れる人。<b>ビジネスモデルが固まるまでに2年かかっている</b>ので、1年で判定していたら世に出ていない。\nそして上場の翌期に経常赤字。理由が「株主らの期待に応えようと攻めた」こと。田中邦裕・藤田晋・熊谷正寿と全く同じ形で、これで4例目になった。頂点の直後に外圧で踏むアクセルは事故る、というのはもう法則として扱っていい。",
@@ -724,6 +741,7 @@ const DATA = [
 },
 {
  id:"hirao", name:"平尾 丈", roma:"HIRAO JOE",
+ ctype:"創業", born:1982,
  role:"じげん 代表取締役社長執行役員CEO", company:"じげん",
  since:2006, sector:"HR／マッチングメディア", gen:"第2世代", accent:"#A61E4D", x:52, y:74, status:"filled",
  essay:"起業か就職かで悩まず、<b>起業した会社の代表を兼任したまま新卒入社した</b>人。ゼロから独立するか大企業に残るかでも悩まず、傘の中で作ってからMBOで買い取った。二者択一を、条件交渉で三択に変えている。\n監理事業を続けるかSaaSに賭けるか、という二択にあなたが陥ったときの解毒剤になる。本業のキャッシュで開発を回す形は、この人の言葉でいえば立派な別解だ。",
@@ -756,6 +774,7 @@ const DATA = [
 },
 {
  id:"iyeiri", name:"家入 一真", roma:"IEIRI KAZUMA",
+ ctype:"創業", born:1978,
  role:"CAMPFIRE 代表取締役／連続起業家・投資家", company:"CAMPFIRE ほか",
  since:2001, sector:"クラウドファンディング／コミュニティ", gen:"第2世代", accent:"#E5541B", x:90, y:22, status:"filled",
  essay:"65人で唯一、<b>弱さが資産として機能している</b>人。上場で得た十数億円を2年で使い果たしたことまで自著で明かし、自分の駄目さを受け入れて、できる人に助けてもらうのが上手いと評される。\n重要なのは、居場所がなかった人間が居場所を作り、金がなかった人間が金の流れを作ったこと。原体験と事業テーマが完全に一致している。縁道と構造が同じなので、あなたには読みどころが多いはずだ。",
@@ -790,6 +809,7 @@ const DATA = [
 },
 {
  id:"tsuji", name:"辻 庸介", roma:"TSUJI YOSUKE",
+ ctype:"創業", born:1976,
  role:"マネーフォワード 代表取締役社長 グループCEO", company:"マネーフォワード",
  since:2012, sector:"SaaS×フィンテック", gen:"第3世代", accent:"#4C4CA8", x:66, y:80, status:"filled",
  essay:"失敗の開示を戦略にしている唯一の人。<b>仮想通貨事業の事実上の撤退、全社員が白けたバリュー発表、明け方のコンビニで泣いた夜まで章題にして本にした。</b>若手起業家に同じ失敗をさせないため、と本人は言う。\nあなたに効くのは「10言って1つやってもらえたら御の字」。1回言って伝わらないのは異常ではない、と思えるだけで、システム導入の進め方が変わる。松本大の下で学んだ「一発逆転はない」もセットで効く。",
@@ -823,6 +843,7 @@ const DATA = [
 },
 {
  id:"sasaki", name:"佐々木 大輔", roma:"SASAKI DAISUKE",
+ ctype:"創業", born:1980,
  role:"freee 代表取締役CEO", company:"freee",
  since:2012, sector:"SaaS／スモールビジネス", gen:"第3世代", accent:"#7C3AED", x:56, y:70, status:"filled",
  essay:"65人であなたと最も構造が近い。<b>FAXやチラシが主流だった日本のスモールビジネスという、キラキラしていない領域に賭けた</b>。しかも動機の一つが、祖父の代から続く実家の美容院で見た煩雑な雑務だった。\n監理団体・技能実習・リネンサプライ。まさにキラキラしていない領域で、だからこそ余白が大きい。「倍率の低いほうを選ぶ」という留学先の決め方まで含めて、この人のルールはほぼそのまま流用できる。",
@@ -857,6 +878,7 @@ const DATA = [
 },
 {
  id:"miyata", name:"宮田 昇始", roma:"MIYATA SHOJI",
+ ctype:"創業",
  role:"Nstock 代表取締役CEO（SmartHR 創業者）", company:"SmartHR / Nstock",
  since:2013, sector:"HR SaaS／株式報酬", gen:"第3世代", accent:"#00A5CF", x:64, y:58, status:"filled",
  essay:"原体験は探すものではなく思い出すもの、と教えてくれる人。<b>難病で倒れた際に社会保険で2か月分の生活費が保障され療養に専念できた。もし手続きの煩雑さで受給が遅れる人がいたら——これは自分たちがやるべきだ、と確信した。</b>\n10万人に1人のレベルまで重症化し、一時は車椅子。そこから2年で10回以上外してSmartHRに辿り着く。あなたが制度に助けられた場面、苦しんだ場面を10個書き出すと、監理ナビの要件が出てくる。",
@@ -890,6 +912,7 @@ const DATA = [
 },
 {
  id:"fukushima", name:"福島 良典", roma:"FUKUSHIMA YOSHINORI",
+ ctype:"創業",
  role:"LayerX 代表取締役CEO（Gunosy 創業者）", company:"LayerX",
  since:2012, sector:"AI／SaaS／フィンテック", gen:"第3世代", accent:"#1F2329", x:74, y:56, status:"filled",
  essay:"NFTで市場が最も盛り上がっていた時期に、祖業のブロックチェーンを捨てると宣言した人。<b>売上は立っていたが限界を感じ、30名ほどの従業員を説得したうえで撤退している。</b>\nそして「成功体験は隙になる」。フラットな組織を含む定説を過信して失敗した4例を実名で公開している。定説には成立条件がある——青野慶久の型を導入しようとするときは、この人の警告とセットで読むのが正しい。",
@@ -922,6 +945,7 @@ const DATA = [
 },
 {
  id:"morikawa", name:"森川 亮", roma:"MORIKAWA AKIRA",
+ ctype:"創業", born:1967,
  role:"C Channel 代表取締役社長", company:"C Channel（元LINE社長）",
  since:2003, sector:"メディア／動画", gen:"第2世代", accent:"#5A6472", x:70, y:26, status:"filled",
  essay:"65人で最も劇薬。ビジョンは不要、社員教育はばかばかしい、モチベーションを上げてもらう必要がある人は失格。ルール1と2に⚠️を付けたのはそのためだ。<b>全員が自走できる少数精鋭でしか成立しない。</b>\nただし「足すのではなく削る」だけは全組織に効く。機能追加の要望が来たときに、まず何を消せるかを考える。ARCANAもジョウケンくんも、足し算だけのツールは必ず重くなる。",
@@ -954,6 +978,7 @@ const DATA = [
 },
 {
  id:"shigematsu", name:"重松 大輔", roma:"SHIGEMATSU DAISUKE",
+ ctype:"創業", born:1976,
  role:"スペースマーケット 代表取締役", company:"スペースマーケット",
  since:2014, sector:"シェアリングエコノミー", gen:"第3世代", accent:"#4A6B8A", x:62, y:50, status:"filled",
  essay:"⭐️をつけた「市場がないなら業界団体から作る」が、いまのあなたに最も近い。<b>シェアリングエコノミーという言葉も市場もなかった2016年に、協会を設立して代表理事に就いた。</b>規制される側から、整える側へ回っている。\n2027年の育成就労は実務基準がまだ固まっていない。監理支援機関としての運用基準を先に書いて公開する——監理ナビより先に、これが効く可能性がある。",
@@ -986,6 +1011,7 @@ const DATA = [
 },
 {
  id:"mera", name:"米良 はるか", roma:"MERA HARUKA",
+ ctype:"創業",
  role:"READYFOR 創業者・代表取締役CEO", company:"READYFOR",
  since:2011, sector:"クラウドファンディング", gen:"第3世代", accent:"#6B2D5C", x:44, y:52, status:"filled",
  essay:"創業者の長期離脱を経験している唯一の人。<b>2017年7月から翌年1月まで、闘病のため完全に現場を離れた。</b>意図した設計ではなかったが、結果として組織の自立度が試された。\nそして「自分はマルチな人間ではないので、できることは誰よりも圧倒的にできるようにして、できないことは圧倒的にできる人と一緒にやる」。あなたが1か月抜けたら何が止まるか——それがそのまま属人化のリストになる。",
@@ -1019,6 +1045,7 @@ const DATA = [
 },
 {
  id:"kinoshita", name:"木下 勝寿", roma:"KINOSHITA KATSUHISA",
+ ctype:"創業", born:1968,
  role:"北の達人コーポレーション 代表取締役社長", company:"北の達人",
  since:2000, sector:"D2C／EC", gen:"第1世代", accent:"#B07A18", x:22, y:86, status:"filled",
  essay:"実務の粒度が65人で最も細かい。<b>同じ利益なら売上は少ないほうがいい、無収入寿命24か月、5段階利益管理</b>。明日そのまま使える型が並ぶ。\nそして谷が濃い。全盛期の6分の1まで落ちてから1年で業績13倍。しかも急落期には実はKPIを作っていなかったと認め、KPIは間違えると優秀な人ほど誤った方向に全力疾走すると語る。数値管理を強めていく局面のあなたには、推進材料ではなく警告として効く。",
@@ -1052,6 +1079,7 @@ const DATA = [
 },
 {
  id:"tsunezawa", name:"経沢 香保子", roma:"TSUNEZAWA KAHOKO",
+ ctype:"創業", born:1973,
  role:"キッズライン 創業者（2025年12月に社長退任）", company:"キッズライン",
  since:2000, sector:"育児支援／マッチング", gen:"第1世代", accent:"#E07A5F", x:66, y:44, status:"filled",
  essay:"収録するか最も迷った人。2020年に自社サービスで重大な事案が起き、情報発信の遅れが厳しく批判された。それでも入れたのは、本人が退任にあたって<b>「批判もあるテーマだからこそ逃げずに話す」</b>として当時の状況と後悔を語ったからだ。\n監理団体は人の安全を預かる事業だ。事故そのものより遅れた説明が信頼を壊す、という構造はそのまま当てはまる。失敗手順の1項目目に「最も重い被害を受けたのは利用者側」と明記したのは、事業側の教訓としてだけ読むと本質を外すからだ。",
@@ -1084,6 +1112,7 @@ const DATA = [
 },
 {
  id:"koizumi", name:"小泉 文明", roma:"KOIZUMI FUMIAKI",
+ ctype:"内部登用・招聘",
  role:"鹿島アントラーズ 代表取締役社長／メルカリ 取締役会長", company:"鹿島アントラーズ／メルカリ",
  since:2006, sector:"経営管理／スポーツ", gen:"第2世代", accent:"#9B2226", x:46, y:86, status:"filled",
  essay:"65人で唯一、創業者ではない経営者。<b>ミクシィには上場の2か月後に入り、メルカリにはまだ小さい時期に「売買は絶対に世の中を変える」と確信してから入っている。</b>作る人ではなく、伸ばす人としての職能を確立した稀有な例。\nそして「チーム経営は情報流通と意思決定の変革から」。制度や理念より前に、情報がどこで止まっているかを見る。あなたのSlack移行もARCANAも、ツール導入ではなく情報経路の設計だと読み替えると、優先順位が変わる。",
@@ -1116,6 +1145,7 @@ const DATA = [
 },
 {
  id:"furukawa", name:"古川 健介（けんすう）", roma:"FURUKAWA KENSUKE",
+ ctype:"創業", born:1981,
  role:"アル 代表取締役／連続起業家・投資家", company:"アル",
  since:2004, sector:"コミュニティ／メディア", gen:"第2世代", accent:"#0F766E", x:80, y:36, status:"filled",
  essay:"19歳の学生コミュニティから現在のマンガのサービスまで、<b>20年以上ドメインを変えていない</b>。流行を追って領域を移さなかったから蓄積が効いている。\n面白いのは出口の形が毎回違うこと。売却して離れる、グループ内で続ける、独立して再創業。1つの型に固定していない。そして売却の翌年にあえて大企業へ新卒入社している。成功したあとに一段下がって学び直す、という選択をキャリアで複数回している人。",
@@ -1149,6 +1179,7 @@ const DATA = [
 },
 {
  id:"chiba", name:"千葉 功太郎", roma:"CHIBA KOTARO",
+ ctype:"内部登用・招聘", born:1974,
  role:"DRONE FUND 創業者・代表パートナー／投資家", company:"DRONE FUND／千葉道場",
  since:2009, sector:"投資／ドローン・エアモビリティ", gen:"第2世代", accent:"#2F7F8F", x:86, y:40, status:"filled",
  essay:"2度の上場を経験した直後に役員を退任し、投資家へ移った。<b>うまくいっている状態で降りる</b>という判断は、森川亮・南場智子とも共通する。\n注目は「市場が本格化するのは十数年先」という前提でファンドを作ったこと。10年満期のファンドで13年先の市場を狙う矛盾を、認識したまま張っている。2027年の制度移行は3年後——この人の時間感覚からすれば、むしろ遅いくらいの近さだ。",
@@ -1181,6 +1212,7 @@ const DATA = [
 },
 {
  id:"horie", name:"堀江 貴文", roma:"HORIE TAKAFUMI",
+ ctype:"創業", born:1972,
  role:"実業家・投資家（インターステラテクノロジズ ファウンダー）", company:"多分野",
  since:1996, sector:"宇宙／飲食／メディア", gen:"第1世代", accent:"#3D3D3D", x:94, y:18, status:"filled",
  essay:"65人で最も深い谷。<b>逮捕から5年争い、懲役2年6か月が確定して収監、仮釈放。事業も肩書きも社会的信用も一度失っている。</b>\n重要なのはそこから何を選んだか。出所したその年に、成果が出るまで最も時間のかかる民間宇宙開発を始め、6年後に民間単独で高度100kmを超えた。信用を失った局面では、派手な挽回策より時間のかかる本質的な事業のほうが結果的に早い——という反証しにくい実例になっている。",
@@ -1214,6 +1246,7 @@ const DATA = [
 },
 {
  id:"hayashi", name:"林 要", roma:"HAYASHI KANAME",
+ ctype:"創業", born:1973,
  role:"GROOVE X 代表取締役社長", company:"GROOVE X",
  since:2015, sector:"ロボティクス", gen:"第3世代", accent:"#C86B98", x:80, y:44, status:"filled",
  essay:"65人で唯一「役に立たないもの」を作っている。起源が美しい。<b>高齢者施設でロボットが起動せず、周囲が「頑張れ」と応援し始めた。動いた瞬間、会場は思いが通じたと沸いた。何の苦労もなく動いたときより、感動が強く働いていた。</b>\nもうひとつ、施設長の「手が温かかったらいいのに」という一言。技術的にはヒーターを入れるだけで面白味がないが、体験から見れば決定的だと判断して実装した。現場の一言を、簡単だからと軽く扱わない。",
@@ -1247,6 +1280,7 @@ const DATA = [
 },
 {
  id:"hoshino", name:"星野 佳路", roma:"HOSHINO YOSHIHARU",
+ ctype:"承継", born:1960,
  role:"星野リゾート 代表", company:"星野リゾート", domain:"老舗・職人",
  since:1991, sector:"宿泊・観光", gen:"継承世代", accent:"#1B4965", x:26, y:74, status:"filled",
  essay:"あなたと正反対の型なので、対比として価値がある。<b>学んだ理論を自社流にアレンジせず、原文に書かれた手順のまま実行する</b>。独自解釈を挟まないから、うまくいかないときに原因を特定できる。\n入社半年で解任された経験を「1ミリの矛盾も後悔もなかった」と振り返り、その後の不良債権回収の現場を最良の教材にしている。倒産確率まで社員に開示する徹底ぶりは、青野慶久・熊谷正寿と同じ結論に別経路で着いた例。",
@@ -1279,6 +1313,7 @@ const DATA = [
 },
 {
  id:"sakurai", name:"桜井 博志", roma:"SAKURAI HIROSHI",
+ ctype:"承継", born:1950,
  role:"獺祭（旧・旭酒造）会長／三代目当主", company:"獺祭", domain:"老舗・職人",
  since:1984, sector:"日本酒", gen:"継承世代", accent:"#6A4C93", x:50, y:60, status:"filled",
  essay:"⭐️をつけた「技術の中核を外部に置かない」が、あなたに直撃する。<b>メーカーなのに製造技術をつかさどる部門が社外にあるのは危うい</b>——杜氏制度の廃止は伝統への反抗ではなく、メーカーとして常識的な判断だったと語る。\n監理ノウハウが特定の職員や外部の士業にしかない状態は、まったく同じ危うさだ。そして谷が濃い。地ビールで約2億円の借金、杜氏の離脱。壁があったから四季醸造が生まれた、と本人が総括している。",
@@ -1312,6 +1347,7 @@ const DATA = [
 },
 {
  id:"nakagawa", name:"中川 政七（十三代）", roma:"NAKAGAWA MASASHICHI",
+ ctype:"承継", born:1974,
  role:"中川政七商店 会長／十三代", company:"中川政七商店", domain:"老舗・職人",
  since:2002, sector:"工芸／小売", gen:"継承世代", accent:"#A63A2E", x:34, y:66, status:"filled",
  essay:"⭐️の「自社で効いた解を、業界に配る」が監理ナビの本質そのもの。<b>自社の赤字部門を立て直した経験が他社にも当てはまると気づいてコンサルを始め、60社以上を再生した。秘訣は「当たり前の経営を指南しただけ」。</b>\n裏を返せば、伝統産業には当たり前が欠けているということ。監理団体業界も同じ構造で、数字を見る・手順を書く・評価基準を決める、これだけで上位に入れる可能性が高い。順番も正しい。先に自社で効かせてから外に出している。",
@@ -1345,6 +1381,7 @@ const DATA = [
 },
 {
  id:"ikeuchi", name:"池内 計司", roma:"IKEUCHI KEIJI",
+ ctype:"承継",
  role:"IKEUCHI ORGANIC 代表", company:"IKEUCHI ORGANIC", domain:"老舗・職人",
  since:1999, sector:"タオル／繊維", gen:"継承世代", accent:"#2E8B87", x:18, y:38, status:"filled",
  essay:"頂点と底が同じ年に来た人。<b>2003年前半に首相の工場視察とテレビ特集で注目され、同年9月に主要取引先の倒産に巻き込まれて民事再生。負債約10億円。</b>外部評価の高さと財務の安全は無関係だと教えてくれる。\nそして再建で選んだのが、当時売上の1%しかなかった自社ブランドを主軸に据えることだった。99%あった受注生産ではなく1%に賭ける。比率は現在の写像にすぎず、将来性で選ぶという判断。",
@@ -1377,6 +1414,7 @@ const DATA = [
 },
 {
  id:"akiyama", name:"秋山 利輝", roma:"AKIYAMA TOSHITERU",
+ ctype:"創業", born:1944,
  role:"秋山木工 代表／秋山学校 代表理事", company:"秋山木工", domain:"老舗・職人",
  since:1971, sector:"注文家具／職人育成", gen:"継承世代", accent:"#4A3728", x:10, y:14, status:"filled",
  essay:"あなたの育成事業に最も近い型。<b>丁稚5年＋職人3年で、8年経ったら辞める決まり。9年目には武者修行としてあえて外へ送り出す。</b>育てた人を自社に囲い込まない設計が、50年前から制度として動いている。\nただし⚠️を明記した。丸坊主・携帯禁止という制約は、志望者が自ら選んで来る前提でのみ成立する。選択の余地が乏しい外国人材に同じ手法を持ち込めば、育成ではなく強制になる。学ぶのは出口設計と反復の部分だけだ。",
@@ -1409,6 +1447,7 @@ const DATA = [
 },
 {
  id:"yamamoto", name:"山本 七平", roma:"YAMAMOTO SHICHIHEI",
+ ctype:"非経営者", born:1921, died:1991,
  role:"評論家・山本書店店主（1921〜1991）", company:"山本書店", domain:"思想・学問",
  since:1958, sector:"日本人論／組織論", gen:"物故", accent:"#4A4A6A", x:22, y:56, status:"filled",
  essay:"道具として使える人。<b>空気と、それに水を差すという対概念で、日本の意思決定を分析対象にした。</b>名前がつくと、対象として扱えるようになる。\n会議で決まりそうな流れに「これは空気で決まっていませんか」と言えるかどうか。名指しした瞬間に支配力が落ちる。『日本人とユダヤ人』には「全員一致の審決は無効」という章もあり、熊谷正寿の純度90と結論が一致している。まったく違う経路で同じ場所に着いた例。",
@@ -1441,6 +1480,7 @@ const DATA = [
 },
 {
  id:"hirao_s", name:"平尾 誠二", roma:"HIRAO SEIJI",
+ ctype:"非経営者", born:1963, died:2016,
  role:"ラグビー選手・指導者（1963〜2016）", company:"神戸製鋼／日本代表", domain:"競技",
  since:1982, sector:"ラグビー", gen:"物故", accent:"#C25E00", x:62, y:24, status:"filled",
  essay:"ルール1があなたの事業に直撃する。<b>しばかれる、怒られるという外発的プレッシャーで動くチームは、ある程度までは行けても絶対に一番になれない。ミスしたらあかんモードに入ると知恵が働かなくなる。</b>\n叱責で回している受入企業は一定水準で止まる。この理屈を言葉にして企業側に説明できること自体が、監理団体の付加価値になる。8連覇を逃したときに「たまには負けたほうがいい」と自分の名前で書いた記録も、あわせて読む価値がある。",
@@ -1475,6 +1515,7 @@ const DATA = [
 },
 {
  id:"onojiro", name:"小野 二郎", roma:"ONO JIRO",
+ ctype:"創業", born:1925,
  role:"すきやばし次郎 創業者・鮨職人", company:"すきやばし次郎", domain:"老舗・職人",
  since:1965, sector:"鮨", gen:"継承世代", accent:"#8C1C13", x:14, y:6, status:"filled",
  essay:"あなたの戦略と正反対だから収録した。<b>10席ほどのカウンターを60年広げていない。</b>2030年に600名規模を目指すなら、この型は採用できない。\nだからこそ「規模を追う理由を、自分の言葉で言えるか」を試す材料になる。もうひとつ、頂点がどこにあるのかは誰にも分からない、と85歳で語っていること。到達点を設定しないから終わりが来ない。数値目標とは別に、終わらない基準を1つ持つ意味がここにある。",
@@ -1509,6 +1550,7 @@ const DATA = [
 },
 {
  id:"inamori", name:"稲盛 和夫", roma:"INAMORI KAZUO",
+ ctype:"創業", born:1932, died:2022,
  role:"京セラ／KDDI 創業者・JAL会長（1932〜2022）", company:"京セラ／KDDI／JAL", domain:"経営",
  since:1959, sector:"セラミック／通信／航空", gen:"物故", accent:"#B03A48", x:44, y:92, status:"filled",
  essay:"⭐️の「人として正しいか」が、制度移行期のあなたに効く。<b>専門知識のない航空業界の再建を78歳で無報酬で引き受けられたのは、判断基準が業界知識ではなく原理原則にあったからだ。</b>\nもうひとつ、松下幸之助からダム式経営を学んで2000億円を蓄え、それが通信事業への参入を可能にした。アーカイブ内で師弟がつながった最初の例で、思想が世代を越えて実装された記録でもある。",
@@ -1543,6 +1585,7 @@ const DATA = [
 },
 {
  id:"matsushita", name:"松下 幸之助", roma:"MATSUSHITA KONOSUKE",
+ ctype:"創業", born:1894, died:1989,
  role:"松下電器（現パナソニック）創業者（1894〜1989）", company:"パナソニック", domain:"経営",
  since:1918, sector:"電機", gen:"物故", accent:"#1F5C99", x:34, y:90, status:"filled",
  essay:"体力おばけ説の唯一の例外。<b>1929年の恐慌のとき、彼は病床にいた。幹部が人員削減を進言しに来たのは、寝込んでいる本人のところだ。</b>動けない状態で判断だけを下し、実行は全員に委ねた。\n打った手の順序が本質で、人は切らないと先に決めてから方法を考えている。半日勤務・給与全額支給・全員で在庫販売という組み合わせは、この順番からしか出てこない。順序が逆だと、切りやすいところから切る発想になる。",
@@ -1576,6 +1619,7 @@ const DATA = [
 },
 {
  id:"honda", name:"本田 宗一郎", roma:"HONDA SOICHIRO",
+ ctype:"創業", born:1906, died:1991,
  role:"本田技研工業 創業者（1906〜1991）", company:"ホンダ", domain:"経営",
  since:1946, sector:"二輪／四輪", gen:"物故", accent:"#C7302B", x:78, y:24, status:"filled",
  essay:"晩年に一番の学びがある。<b>世界に通用するエンジンは空冷でなければならないと主張し続け、若手が水冷を推しても譲らなかった。創業者の技術的信念が、会社の前進を止める側に回った局面だ。</b>福島良典の「成功体験は隙になる」の実例そのもの。\nそして⭐️の「経営を丸ごと渡す」。実印と経営の全権を藤沢武夫に委ね、自分は技術に徹した。開発も営業も監理も持っているあなたには、ここが一番きつい問いだと思う。",
@@ -1610,6 +1654,7 @@ const DATA = [
 },
 {
  id:"nagamori", name:"永守 重信", roma:"NAGAMORI SHIGENOBU",
+ ctype:"創業", born:1944,
  role:"ニデック創業者（2026年に経営から完全に退任）", company:"ニデック（旧・日本電産）", domain:"経営",
  since:1973, sector:"モーター", gen:"第0世代", accent:"#5D6D7E", x:92, y:44, status:"filled",
  essay:"⚠️このアーカイブで最も重い反面教師。<b>2026年3月の第三者委員会報告で、CFOや執行役員への過度なプレッシャーが不正会計につながったと評価され、一部の会計不正を容認したとの評価は免れないと記された。</b>\n背景として指摘されたのが、売上2兆円を超えても創業者が全てを決め、それを牽制する機能がなかったこと。いま全部を握っているあなたに直撃する。6人のうちに、あなたを止められる人を1人作る。規模が大きくなってからでは誰も止められない。",
@@ -1642,6 +1687,7 @@ const DATA = [
 },
 {
  id:"yanai", name:"柳井 正", roma:"YANAI TADASHI",
+ ctype:"承継", born:1949,
  role:"ファーストリテイリング 代表取締役会長兼社長", company:"ファーストリテイリング", domain:"経営",
  since:1984, sector:"アパレル", gen:"第0世代", accent:"#D62B2B", x:84, y:78, status:"filled",
  essay:"⭐️は撤退基準。<b>新業態を約7か月で撤退し、野菜事業も1年で切っている。始めるのと同じ速度でやめている。</b>だから次に張る回数が残る。\nミエテル、boketto、ジョウケンくん——撤退基準を日付で決めているものはいくつあるか。ここが今のあなたの弱点かもしれない。もうひとつ、26億円の赤字を出して辞表を出した役員を手放さず、後に第2の柱を任せた話。信賞必罰を掲げながら、挑戦の失敗は別扱いにしている。",
@@ -1675,6 +1721,7 @@ const DATA = [
 },
 {
  id:"tsukakoshi", name:"塚越 寛", roma:"TSUKAKOSHI HIROSHI",
+ ctype:"承継", born:1937, died:2026,
  role:"伊那食品工業 実質的創業者・最高顧問（1937〜2026）", company:"伊那食品工業", domain:"経営",
  since:1958, sector:"寒天／食品", gen:"物故", accent:"#4E7A3F", x:8, y:70, status:"filled",
  essay:"あなたの目標と正面からぶつかる人。<b>寒天ブームで急増した翌年に急降下し、48年の連続増収増益が途切れた。そこから「急速な成長は危険。いいことはひとつもない」「理想は確実な低成長」と言い切っている。</b>\n2030年600名という目標を持つなら、これは無視できない反対意見だ。前年を下回らないという歯止めだけを置く、という発想が本当に弱いのかどうか。伸ばす速度の上限を自分で決めているか、が問われる。",
@@ -1707,6 +1754,7 @@ const DATA = [
 },
 {
  id:"nitori", name:"似鳥 昭雄", roma:"NITORI AKIO",
+ ctype:"創業", born:1944,
  role:"ニトリホールディングス 創業者・会長", company:"ニトリ", domain:"経営",
  since:1967, sector:"家具・インテリア", gen:"第0世代", accent:"#1E7A4F", x:70, y:82, status:"filled",
  essay:"どん底での判断が転機になった型。<b>2号店で借金を抱えた最中に、さらに親戚から40万円を借りてアメリカへ渡り、人生観が反転している。</b>苦しいときに現場を離れて外を見る、という判断は村田吉弘・山田進太郎とも共通する。\nそして志を数式に翻訳する力。豊かな暮らしという抽象を「所得は3倍にできないが、価格は3分の1にできる」に変えた。縁道を数式にすると何になるか——失踪率ゼロ、手数料◯円以下、定着率◯%。志は数字にして初めて動く。",
@@ -1739,6 +1787,7 @@ const DATA = [
 },
 {
  id:"suzuki_t", name:"鈴木 敏文", roma:"SUZUKI TOSHIFUMI",
+ ctype:"内部登用・招聘", born:1932, died:2026,
  role:"セブン-イレブンを日本に作った人（1932〜2026）", company:"セブン&アイ", domain:"経営",
  since:1973, sector:"流通・コンビニ", gen:"物故", accent:"#D97D0D", x:74, y:88, status:"filled",
  essay:"始まりと終わりが対照的な人。<b>1973年、役員陣がほぼ全員反対するなか小型店に賭けた。</b>これがなければ日本のコンビニは存在しない。反対が強いほど空白が大きい、の最も明快な実例。\n一方、終わり方には⚠️を付けた。人事案が賛成7・反対6・白票2で否決され、同日に引退を表明したが、退任会見では周囲への批判が中心で自らの責任には触れなかったと報じられている。永守重信と並べると、降り方が功績の評価を左右することがよく分かる。",
@@ -1771,6 +1820,7 @@ const DATA = [
 },
 {
  id:"murata", name:"村田 吉弘", roma:"MURATA YOSHIHIRO",
+ ctype:"承継", born:1951,
  role:"菊乃井 三代目主人／日本料理アカデミー理事長", company:"菊乃井", domain:"老舗・職人",
  since:1976, sector:"日本料理", gen:"継承世代", accent:"#3E6B5A", x:30, y:44, status:"filled",
  essay:"⭐️が2つ付いた数少ない人。ひとつは<b>渡仏して初めて、自分がまったく日本料理を説明できないと気づいたこと。</b>外に出て初めて、自分の持ち物の価値が分かった。日本とインドネシアを往復しているあなたには、この構造がそのまま当てはまる。\nもうひとつが本命で、出汁の理論から切る技法まで体系化した全集を、無料で公開している。理由は「経済的に余裕のない国の若者でも学べるように。それが未来への投資だ」。秋山利輝・中川政七と同じ結論に、料理の世界から着いている。",
@@ -1804,6 +1854,7 @@ const DATA = [
 },
 {
  id:"niinami", name:"新浪 剛史", roma:"NIINAMI TAKESHI",
+ ctype:"内部登用・招聘", born:1959,
  role:"経営者・元サントリーHD会長（2025年に辞任）", company:"ローソン／サントリーHD", domain:"経営",
  since:2002, sector:"流通／飲料", gen:"第1世代", accent:"#7A5C99", x:76, y:62, status:"filled",
  essay:"収録の仕方に最も気を遣った人。<b>2025年に捜査を受けて会長を辞任したが、違法薬物は発見されず尿検査でも検出されず、2026年5月に不起訴となっている。</b>人物を裁くためではなく、疑いが生じたときに何が起きるかの記録として置いた。\n監理団体は信用business だ。職員や取引先を巡る疑いが出た瞬間の対応手順を、平時に決めておく必要がある。顧客のいる会社の職は即座に辞し、個人参加の財界団体はすぐには辞めなかった——役職ごとの降り順を先に決めておく、という実務的な示唆もある。",
@@ -1836,6 +1887,7 @@ const DATA = [
 },
 {
  id:"hori", name:"堀 義人", roma:"HORI YOSHITO",
+ ctype:"創業",
  role:"グロービス経営大学院 学長／グロービス・キャピタル・パートナーズ 代表パートナー", company:"グロービス", domain:"経営",
  since:1992, sector:"教育／ベンチャー投資", gen:"第1世代", accent:"#0E6E8C", x:60, y:88, status:"filled",
  essay:"⭐️の「事業ではなくインフラを作る」が、監理ナビの位置づけを変える。<b>ヒト・カネ・チエという3つのビジネスインフラを日本に作るという構想から逆算して、教育・投資・場づくりへ展開している。</b>\nSaaSを売るのではなく、監理業界のヒト（育成）・カネ（補助金）・チエ（ノウハウ）を揃える、と定義し直すと、集まる協力者の質が変わる。日本版ダボス会議を自分で創設したのも同じ発想で、人脈を求めず、人脈が生まれる場の主催者になっている。",
@@ -1869,6 +1921,7 @@ const DATA = [
 },
 {
  id:"yoneda", name:"米田 肇", roma:"YONEDA HAJIME",
+ ctype:"創業", born:1972,
  role:"HAJIME オーナーシェフ", company:"HAJIME", domain:"老舗・職人",
  since:2008, sector:"ガストロノミー", gen:"第3世代", accent:"#B5651D", x:40, y:26, status:"filled",
  essay:"⭐️が2つ。ひとつは<b>電子工学を学びエンジニアだった人が料理人に転身し、0.1℃・1mm単位まで計算し尽くす調理を確立したこと。</b>異分野の頭をそのまま持ち込んだ。あなたがシステムを作れることは、監理業界では同じ意味を持つ。\nもうひとつが本命で、2020年、コロナで自店が休業している最中に政府へ掛け合い、雇用調整助成金の拡充と家賃支援給付金の制度を取り付けた。自分の営業再開より先に、業界全体の生存条件を作りにいっている。",
@@ -1902,6 +1955,7 @@ const DATA = [
 },
 {
  id:"ando", name:"安藤 忠雄", roma:"ANDO TADAO",
+ ctype:"非経営者", born:1941,
  role:"建築家", company:"安藤忠雄建築研究所", domain:"表現",
  since:1969, sector:"建築", gen:"継承世代", accent:"#6E7B7F", x:26, y:20, status:"filled",
  essay:"著書のタイトルが『連戦連敗』。<b>事務所開設から1年は注文ゼロで、その間ずっと巨匠の作品集を読み、コンペに応募し続けた。</b>負けの記録そのものを仕事の中身として書いた人。\n「学歴も社会基盤も、特別な才能もない。困難ばかり。ひたすら全力で生きるしかなかった」と語り、がんで5つの臓器を摘出しながら80代で現役。⭐️を付けたのは「負けの記録を残す」。失注や不採択を残しているか。勝ちだけを並べた資料は、次に使えない。",
@@ -1935,6 +1989,7 @@ const DATA = [
 },
 {
  id:"honda_k", name:"本田 圭佑", roma:"HONDA KEISUKE",
+ ctype:"非経営者", born:1986,
  role:"サッカー選手・実業家・投資家", company:"SOLTILO／Dreamers Fund ほか", domain:"競技",
  since:2005, sector:"サッカー／投資・教育", gen:"第3世代", accent:"#1B4F9C", x:88, y:52, status:"filled",
  essay:"言葉を先に出して、退路を断つ型。<b>40歳を前に「膝が泣き始めた。僕の思いと体は別」と衰えを率直に認めつつ、「言葉には責任が伴う。プレッシャーはいくらあってもいい。ダメな時に思い切り批判されてもいい」と言う。</b>\n三木谷浩史の公約型と同じ構造だ。2030年の目標を外に出すかどうか。出せば退路が消えるが、集まる人と情報の量が変わる。所属クラブがない時期も引退を表明しないという、肩書きと活動を切り離す姿勢も併せて読む価値がある。",
@@ -1968,6 +2023,7 @@ const DATA = [
 },
 {
  id:"ohtani", name:"大谷 翔平", roma:"OHTANI SHOHEI",
+ ctype:"非経営者", born:1994,
  role:"プロ野球選手（投手・打者）", company:"ロサンゼルス・ドジャース", domain:"競技",
  since:2013, sector:"野球", gen:"第3世代", accent:"#1E5BA8", x:66, y:70, status:"filled",
  essay:"⭐️は81マスの目標達成シート。<b>高校1年のときに、中心の大目標を8つに分け、それぞれをさらに8つの行動に落とした。運や人間性まで項目に含めている。</b>\n2030年ビジョンを8×8で分解する価値がある。制度対応・採用・開発・資金・送り出し——各8項目まで降ろすと、今日やることが自動的に出る。そして身体を交渉相手として扱う姿勢。全力か休養かの二択にせず、どこまでならできるかを調整し続ける。経営者の体力管理にそのまま応用できる。",
@@ -2001,6 +2057,7 @@ const DATA = [
 },
 {
  id:"kusama", name:"草間 彌生", roma:"KUSAMA YAYOI",
+ ctype:"非経営者", born:1929,
  role:"前衛芸術家", company:"—", domain:"表現",
  since:1957, sector:"現代美術", gen:"継承世代", accent:"#D4145A", x:34, y:8, status:"filled",
  essay:"苦しめているものを、消さずに方法へ変えた人。<b>幼少期からの幻視や幻聴という消せない条件が、そのまま網目と水玉という技法になっている。</b>克服ではなく、素材化。\nそして時間軸。本格的な再評価は60代半ばで、それまでの数十年は決して順風ではなかった。ニューヨークでの困窮、帰国後の不遇、療養しながらの制作。<b>遅いということが、この人の前では意味を持たない。</b>評価と制作を切り離して手を止めなかったことだけが、共通項として残っている。",
@@ -2034,6 +2091,7 @@ const DATA = [
 },
 {
  id:"murakami_t", name:"村上 隆", roma:"MURAKAMI TAKASHI",
+ ctype:"創業", born:1962,
  role:"アーティスト／カイカイキキ 創業者", company:"カイカイキキ", domain:"表現",
  since:1993, sector:"現代美術", gen:"継承世代", accent:"#E4A11B", x:86, y:66, status:"filled",
  essay:"⭐️は「評価される場所を、先に選ぶ」。<b>活動初期から日本の美術市場に不満を持ち、まず欧米で地位を確立して逆輸入するという順路を設計した。</b>海外の評価を受け入れる日本の性質を、意図的に利用している。\n監理ナビも同じ手が使える。国内の同業に売り込む前に、国際的な評価や海外の送り出し機関での実績を先に取ると、国内での見え方が変わる。作品と、それを評価する言葉（スーパーフラット）を同時に作った点も、基準を作った側が有利になるという実例。",
@@ -2067,6 +2125,7 @@ const DATA = [
 },
 {
  id:"yazawa", name:"矢沢 永吉", roma:"YAZAWA EIKICHI",
+ ctype:"非経営者", born:1949,
  role:"ミュージシャン", company:"—", domain:"表現",
  since:1972, sector:"ロック", gen:"継承世代", accent:"#B8912E", x:82, y:32, status:"filled",
  essay:"⚠️と⭐️が1つずつ。⚠️は<b>オーストラリアの資産管理を知人に任せ、毎月の銀行残高をFAXで受け取って確認していたのに、その報告自体が偽られていたこと。</b>インドネシアの直営4校と、まったく同じリスク構造だ。報告書の数字だけで見ていると、その数字ごと作られる。\n⭐️は、被害者でありながら35億円を自分の借金として引き受け、6年で完済したこと。監理団体は他人の行為の責任を負う立場だ。制度のせいにせず引き受けられるかで、評価が決まる。",
@@ -2100,6 +2159,7 @@ const DATA = [
 },
 {
  id:"okamoto", name:"岡本 太郎", roma:"OKAMOTO TARO",
+ ctype:"非経営者", born:1911, died:1996,
  role:"芸術家（1911〜1996）", company:"—", domain:"表現",
  since:1947, sector:"美術・思想", gen:"物故", accent:"#E23D28", x:78, y:12, status:"filled",
  essay:"ゼロからの再出発が凄まじい。<b>パリから戦時下の日本へ戻され、徴兵、中国での収容所。たどり着いた家は焼け野原で、アトリエもパリ時代の作品もすべて失っていた。</b>\nそして評価の時差。1950年の対極主義の宣言は賛同を得られず流会になり、亡くなった当時は変人のように扱われ、縄文土器論は考古学の世界で約半世紀無視された。⚠️を付けたのは慰めではなく時間軸の話としてだ。正しさが認められるまでの年数を、計画に織り込む必要がある。",
@@ -2133,6 +2193,7 @@ const DATA = [
 },
 {
  id:"kobayashi", name:"小林 喜光", roma:"KOBAYASHI YOSHIMITSU",
+ ctype:"内部登用・招聘", born:1946,
  role:"東京電力HD 取締役会長／元 経済同友会 代表幹事", company:"三菱ケミカル／東京電力HD", domain:"経営",
  since:2007, sector:"化学／エネルギー", gen:"第0世代", accent:"#3B6E8F", x:40, y:94, status:"filled",
  essay:"⭐️が2つとも効く。ひとつは<b>経済同友会の代表幹事を退任するにあたって「挫折の30年、まず認めよう」と述べたこと。</b>財界の代表が、自国の停滞を挫折という言葉で正面から認めた。桜井博志の「負けを認める」と同じ結論だ。\nもうひとつがKAITEKI経営。企業価値を経済的・技術的・社会的の3軸で測る枠組みで、財務諸表に載らないものを管理対象として定義している。縁道を経営指標にする方法が、ここにある。",
@@ -2165,6 +2226,7 @@ const DATA = [
 },
 {
  id:"uno", name:"宇野 康秀", roma:"UNO YASUHIDE",
+ ctype:"創業", born:1963,
  role:"U-NEXT HOLDINGS 代表取締役社長CEO", company:"U-NEXT HOLDINGS", domain:"経営",
  since:1989, sector:"人材／通信／映像配信", gen:"第1世代", accent:"#1D3F73", x:72, y:46, status:"filled",
  essay:"落差が最大級。<b>リーマン後に1000億円超の損失を出して社長を退き、47歳で1事業を切り出して再出発、再上場して元の会社に戻ってきた。</b>継承の入口も断絶で、勘当されたまま父が病床に就くまで口を利かなかった。\n⭐️が2つ。判断基準が「借りたものは返す」「仲間は見捨てない」の2つだけだったこと——判断基準は少ないほうが強い。そして肩書きを守らず、規模の小さい場所へ自分から降りたこと。失敗した後の身の置き方として、最も参考になる。",
@@ -2198,6 +2260,7 @@ const DATA = [
 },
 {
  id:"shimada", name:"島田 亨", roma:"SHIMADA TORU",
+ ctype:"創業", born:1965,
  role:"投資家／元 楽天野球団 代表取締役社長・オーナー", company:"インテリジェンス創業／楽天／USEN-NEXT", domain:"経営",
  since:1989, sector:"人材／スポーツ／投資", gen:"第1世代", accent:"#8C2F39", x:70, y:60, status:"filled",
  essay:"「業種は関係ない」の最強の証拠。<b>38勝97敗1分という最下位の成績で、球団を初年度黒字化した。</b>当時のリーグ各球団は毎年20〜40億円規模の赤字が常態化していた中で、である。\n⭐️を付けたのは、参入の背景に「赤字を理由に球団が消滅したばかり」という事情があり、だから至上命題を黒字化に置いたこと。前任者が何で死んだかを見て、自分の最優先課題を決めている。監理団体の許可取消や廃業事例には、成功事例より多くの情報がある。",
@@ -2232,6 +2295,7 @@ const DATA = [
 },
 {
  id:"kasahara", name:"笠原 健治", roma:"KASAHARA KENJI",
+ ctype:"創業", born:1975,
  role:"MIXI 取締役ファウンダー・上級執行役員", company:"MIXI", domain:"経営",
  since:1997, sector:"SNS／ゲーム", gen:"第2世代", accent:"#D97706", x:56, y:52, status:"filled",
  essay:"「同時に4つ変わった」という認識が的確だ。<b>ガラケーからスマホへ、SNSの主戦場がスマホへ、海外の巨大SNSが上陸、そして新サービスに押されてジリ貧。試練が同時多発的に押し寄せた、と語る。</b>\nあなたの業界も同じ形だ。制度移行、人手不足、AI、円安。1つずつ対処する計画では足りない。そして時価総額2200億円の頂点から7年で四半期赤字、37歳で社長を降り、20年後にもう一度SNSを作っている。負けた領域から撤退していない。",
@@ -2266,6 +2330,7 @@ const DATA = [
 },
 {
  id:"tanaka_y", name:"田中 良和", roma:"TANAKA YOSHIKAZU",
+ ctype:"創業", born:1977,
  role:"グリー 代表取締役会長兼社長", company:"グリー", domain:"経営",
  since:2004, sector:"SNS／ゲーム／メタバース", gen:"第2世代", accent:"#2E7D6B", x:64, y:48, status:"filled",
  essay:"⭐️は「業界そのものへの批判」という谷の型。<b>自社の不祥事ではなく、ソーシャルゲーム市場に対する社会からの批判という形で逆風が来た。</b>個社の努力では防げない種類のもので、技能実習制度への批判とまったく同じ構造だ。\nあなたの会社の運用がどれだけ適正でも降りかかる。防げない前提で、説明を先に用意しておくべき類型になる。出発点が個人の趣味だったことも面白い。公開1か月で会員1万人を突破し、それが会社になった。ARCANAと同じ入り方だ。",
@@ -2300,6 +2365,7 @@ const DATA = [
 },
 {
  id:"nishikawa", name:"西川 潔", roma:"NISHIKAWA KIYOSHI",
+ ctype:"創業",
  role:"ネットエイジ 創業者／インキュベーター", company:"ネットエイジ", domain:"経営",
  since:1998, sector:"インキュベーション", gen:"第1世代", accent:"#5A4E9C", x:74, y:74, status:"filled",
  essay:"⭐️は「起業家経済という単位で考える」。<b>いまのビジネスの構成だけでは経済は永遠にもたない、新陳代謝が必要だ、古いものは外に出して上場企業は常に入れ替わるべきだ</b>——個社ではなく経済の代謝を単位にしている。\n監理団体3200社の業界も、代謝が止まれば沈む。監理ナビを1社の効率化ツールではなく、業界の代謝を上げる装置と位置づけ直せる。渋谷に名前を与えて人を集めた手法は、山本七平の「空気に名前を与える」とちょうど裏表の関係にある。",
@@ -2333,6 +2399,7 @@ const DATA = [
 },
 {
  id:"taiga", name:"松山 太河", roma:"MATSUYAMA TAIGA",
+ ctype:"創業",
  role:"East Ventures パートナー／ベンチャーキャピタリスト", company:"East Ventures", domain:"経営",
  since:2000, sector:"シード投資", gen:"第2世代", accent:"#0F7A8C", x:68, y:38, status:"filled",
  essay:"今日から真似できる型が2つある。ひとつは投資哲学で、<b>事業プランでは不十分、ポテンシャルはプロダクトに表れる。</b>あなたが提案書より先に動くツールを作る癖は、この基準なら圧倒的に有利だ。\nもうひとつが⭐️。面識のない学生がSNSのDMで拙い文章を送ったところ、丁寧に返信して「今から話せますか」と15分の時間を作っている。入口を閉じていない。実習生や無名の企業からの問い合わせに、いまどう返しているか。",
@@ -2366,6 +2433,7 @@ const DATA = [
 },
 {
  id:"ozawa", name:"小澤 隆生", roma:"OZAWA TAKAO",
+ ctype:"創業", born:1972,
  role:"Boost Capital 代表取締役／元 ヤフー 代表取締役社長CEO", company:"Boost Capital", domain:"経営",
  since:1999, sector:"EC／投資", gen:"第1世代", accent:"#C2410C", x:88, y:56, status:"filled",
  essay:"出発点が異様だ。<b>学生時代にバブル崩壊で父の会社の負債60億円を宣告され、年収500万円で40年働いても2億円、つまり30人分の人生が必要だと因数分解し、会社を作って上場か売却する以外に返す道はないと結論して起業している。</b>\n⭐️は、この因数分解の癖。「監理団体は厳しい」で止めず、何社×単価×人数×年数×粗利まで割る。分解すれば打てる手が見える。やりたいから始める型（田中邦裕・山田進太郎）とは正反対で、消去法の起業も同じくらい強い。",
@@ -2400,6 +2468,7 @@ const DATA = [
 },
 {
  id:"minami", name:"南 壮一郎", roma:"MINAMI SOICHIRO",
+ ctype:"創業", born:1976,
  role:"ビジョナル 代表取締役社長／ビズリーチ 創業者", company:"Visional", domain:"経営",
  since:2009, sector:"HR Tech", gen:"第2世代", accent:"#0E4C92", x:72, y:84, status:"filled",
  essay:"⭐️が2つ。ひとつは<b>エンジニア経験がなく採用にも苦戦したため、副業の技術者を束ねて約2か月でサービスを出したこと。</b>後にCTOとなる人物も、創業初期は業務委託の1人だった。6人の組織で監理ナビを開発する体制は、この型でそのまま組める。\nもうひとつは一次情報。そして楽天イーグルスの立ち上げで、島田亨・小澤隆生の近くにいた。この球団の立ち上げが、20年後に3人の収録者を生んでいる。アーカイブ内で最大の人的クラスターだ。",
@@ -2433,6 +2502,7 @@ const DATA = [
 },
 {
  id:"yasuda", name:"安田 隆夫", roma:"YASUDA TAKAO",
+ ctype:"創業", born:1949,
  role:"PPIH 創業会長兼最高顧問（ドン・キホーテ創業者）", company:"PPIH", domain:"経営",
  since:1978, sector:"小売・ディスカウント", gen:"第0世代", accent:"#0B4F8A", x:86, y:70, status:"filled",
  essay:"⭐️が2つとも、あなたの弱点に直撃する。<b>1号店の開業後、現場への直接指導を「教える」から「自分でやらせる」へ転換し、店舗運営の大半を売場担当者に委ねた。</b>判断をあなたに上げさせている限り、6人が6人分の力にならない。\nもうひとつは「他の大手小売企業の真似は絶対にしない」。原点の逸話も良い。深夜に荷解きしていると飲み会帰りの客に「それ、買える？」と声をかけられ、そこから深夜営業に行き着いた。統計ではなく、目の前の1人の行動から業態が決まっている。",
@@ -2468,6 +2538,7 @@ const DATA = [
 },
 {
  id:"shigeta", name:"重田 康光", roma:"SHIGETA YASUMITSU",
+ ctype:"創業", born:1965,
  role:"光通信 代表取締役会長兼CEO", company:"光通信", domain:"経営",
  since:1988, sector:"通信・法人向けサービス", gen:"第1世代", accent:"#7A6C4F", x:90, y:64, status:"filled",
  essay:"永守重信と完全に同じ構造の谷。<b>現場が厳しいノルマを達成するために架空契約に手を出し、下方修正の翌日から20営業日連続ストップ安。24万円だった株価は3600円台まで落ちた。下落率は約99%。</b>\n制度が悪用されたのではなく、達成できない目標が悪用を生んだ。監理ナビのARR目標も受入人数の目標も同じ危険を持つ。そして復活の仕方が示唆的で、投資銘柄ではなく事業会社として着実に利益を積む方向へ、評価の源泉そのものを入れ替えている。",
@@ -2506,6 +2577,11 @@ const $ = s=>document.querySelector(s);
 const app = $("#app");
 const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const NOW = new Date().getFullYear();
+function ageLabel(p){
+  if(p.died) return p.born? "享年 "+(p.died-p.born)+"（"+p.born+"〜"+p.died+"）" : "〜"+p.died;
+  if(p.born) return (NOW-p.born)+"歳（"+p.born+"年生）";
+  return "";
+}
 const filled = DATA.filter(p=>p.status==="filled");
 
 /* storage: window.storage → localStorage → memory */
@@ -2520,7 +2596,7 @@ const store={
 $("#pnum").textContent = "収録 "+filled.length+" ／ 候補 "+DATA.length;
 $("#pbar").style.width = (filled.length/DATA.length*100)+"%";
 
-let view="map", filterGen="all", filterStatus="all", q="", cmp=[];
+let view="map", filterGen="all", filterStatus="all", filterType="all", q="", cmp=[];
 
 document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>{
   document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("on"));
@@ -2595,12 +2671,13 @@ function renderMap(){
 
 function listRowsHTML(){
   const rows=DATA.filter(p=>(filterGen==="all"||(p.domain||"経営")===filterGen))
-    .filter(p=>filterStatus==="all"||p.status===filterStatus)
+    .filter(p=>filterType==="all"||p.ctype===filterType)
     .filter(p=>!q||(p.name+p.company+p.sector+p.role).includes(q))
     .sort((a,b)=>a.since-b.since);
   return rows.map(p=>'<button class="row '+(p.status==="stub"?"stub":"")+'" data-id="'+p.id+'"><div class="l1"><span class="nm">'+esc(p.name)+
      (p.status==="stub"?'<span class="badge">未収録</span>':'')+'</span><span class="yrs">'+(NOW-p.since)+'年目</span></div>'+
-     '<div class="l2">'+esc(p.domain||"経営")+' ／ '+esc(p.role)+'</div>'+
+     '<div class="l2"><span class="ct-badge ct-'+esc(p.ctype||"")+'">'+esc(p.ctype||"")+'</span>'+esc(p.domain||"経営")+(ageLabel(p)?' ／ '+esc(ageLabel(p)):"")+'</div>'+
+     '<div class="l2" style="margin-top:2px">'+esc(p.role)+'</div>'+
      (p.thesis?'<div class="th">'+esc(p.thesis.slice(0,58))+'…</div>':'')+'</button>').join("");
 }
 function bindRows(sel){ document.querySelectorAll(sel).forEach(r=>r.addEventListener("click",()=>go(r.dataset.id))); }
@@ -2609,7 +2686,8 @@ function renderList(){
   app.innerHTML='<section class="view"><div class="hd"><span class="tag">INDEX</span><h2>名鑑</h2></div>'+
    '<input class="search" id="q" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="名前・会社・領域で検索" value="'+esc(q)+'">'+
    '<div class="filters">'+doms.map(g=>'<button data-g="'+g+'" class="'+(filterGen===g?"on":"")+'">'+(g==="all"?"ALL":g)+'</button>').join("")+
-   '<button data-s="filled" class="'+(filterStatus==="filled"?"on":"")+'">収録済のみ</button></div>'+
+   '</div>'+
+   '<div class="filters">'+["all","創業","承継","内部登用・招聘","非経営者"].map(t=>'<button data-t="'+t+'" class="'+(filterType===t?"on":"")+'">'+(t==="all"?"全類型":t)+'</button>').join("")+'</div>'+
    '<div id="rows">'+listRowsHTML()+'</div>'+
    '</section>';
   const el=$("#q"); let composing=false;
@@ -2618,7 +2696,7 @@ function renderList(){
   el.addEventListener("compositionend",()=>{composing=false;upd();});
   el.addEventListener("input",()=>{ if(!composing) upd(); });
   document.querySelectorAll("[data-g]").forEach(b=>b.addEventListener("click",()=>{filterGen=b.dataset.g;renderList()}));
-  document.querySelectorAll("[data-s]").forEach(b=>b.addEventListener("click",()=>{filterStatus=filterStatus==="filled"?"all":"filled";renderList()}));
+  document.querySelectorAll("[data-t]").forEach(b=>b.addEventListener("click",()=>{filterType=b.dataset.t;renderList()}));
   bindRows("#rows .row");
 }
 
@@ -3324,6 +3402,7 @@ function renderPerson(id){
   app.innerHTML='<section class="view" style="padding-top:0">'+
   '<div class="dt-head" style="--accent:'+ac+'"><button class="back" id="bk">← ARCHIVE</button>'+
    '<div class="ru">'+esc(p.roma)+'</div><h1>'+esc(p.name)+'</h1><div class="role">'+esc(p.role)+'</div>'+
+   '<div class="meta"><span class="tag2">'+esc(p.ctype||"")+'</span>'+(ageLabel(p)?'<span class="tag2 age">'+esc(ageLabel(p))+'</span>':"")+'<span class="tag2">'+esc(p.domain||"経営")+'</span></div>'+
    '<div class="thesis" style="border-color:'+ac+'">'+esc(p.thesis)+'</div></div>'+
   '<dl class="spec">'+p.spec.map(s=>'<div><dt>'+esc(s[0])+'</dt><dd>'+esc(s[1])+'</dd></div>').join("")+'</dl>'+
   (p.essay?'<div class="essay" style="border-left-color:'+ac+'"><div class="lb">READING ／ 読みどころ</div>'+p.essay.split("\n").map(t=>'<p>'+t+'</p>').join("")+'</div>':"")+
