@@ -76,7 +76,7 @@ section.view{padding-top:26px}
 .filters button{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;padding:5px 10px;
  background:var(--panel);border:1px solid var(--line);color:var(--muted);cursor:pointer}
 .filters button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.search{width:100%;padding:9px 11px;border:1px solid var(--line);background:var(--panel);font-family:inherit;font-size:14px;margin-bottom:12px}
+.search{width:100%;padding:12px 13px;border:1px solid var(--line);background:var(--panel);font-family:inherit;font-size:16px;margin-bottom:12px;-webkit-appearance:none;border-radius:0}
 .search:focus{outline:2px solid var(--ink);outline-offset:-1px}
 
 /* list */
@@ -243,7 +243,7 @@ section.view{padding-top:26px}
 .barrow .bl span{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);white-space:nowrap}
 .barrow .bg{height:7px;background:#E3E6E2}
 .barrow .bg i{display:block;height:100%;background:var(--ink)}
-.memo{width:100%;padding:10px 11px;border:1px solid var(--line);background:var(--panel);font-family:inherit;font-size:14px;line-height:1.6;resize:vertical;min-height:70px}
+.memo{width:100%;padding:12px 13px;border:1px solid var(--line);background:var(--panel);font-family:inherit;font-size:16px;-webkit-appearance:none;border-radius:0;line-height:1.6;resize:vertical;min-height:70px}
 .memo:focus{outline:2px solid var(--ink);outline-offset:-1px}
 .mlist{margin-top:12px}
 .mitem{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--line);padding:10px 12px;margin-bottom:7px}
@@ -253,7 +253,7 @@ section.view{padding-top:26px}
 /* sync */
 .sync{background:var(--panel);border:1px solid var(--line);padding:14px 15px;margin-bottom:12px}
 .sync label{display:block;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;color:var(--muted);margin:9px 0 3px}
-.sync input{width:100%;padding:9px 10px;border:1px solid var(--line);background:var(--bg);font-family:"JetBrains Mono",monospace;font-size:12px}
+.sync input{width:100%;padding:12px 11px;border:1px solid var(--line);background:var(--bg);font-family:"JetBrains Mono",monospace;font-size:16px;-webkit-appearance:none;border-radius:0}
 .sync input:focus{outline:2px solid var(--ink);outline-offset:-1px}
 .sync .btns{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
 .sync .btns button{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.1em;padding:9px 14px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
@@ -283,7 +283,7 @@ section.view{padding-top:26px}
 .calc .row3:first-of-type{border-top:none}
 .calc label{font-size:14px;line-height:1.5}
 .calc label small{display:block;color:#8C978F;font-size:11.5px}
-.calc input{width:100%;padding:8px;border:1px solid #4B5852;background:#1B2420;color:#fff;font-family:"JetBrains Mono",monospace;font-size:16px;text-align:right}
+.calc input{width:100%;padding:11px 8px;font-size:16px;-webkit-appearance:none;border-radius:0;border:1px solid #4B5852;background:#1B2420;color:#fff;font-family:"JetBrains Mono",monospace;font-size:16px;text-align:right}
 .calc .out{margin-top:14px;padding-top:13px;border-top:1px solid #29332E;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .calc .out div{text-align:center}
 .calc .out dt{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.12em;color:#8C978F}
@@ -2593,61 +2593,63 @@ function renderMap(){
     window.addEventListener("resize",()=>{ if(view==="map") requestAnimationFrame(delabelOverlaps); }); }
 }
 
-function renderList(){
-  const doms=["all",...new Set(DATA.map(p=>p.domain||"経営"))];
+function listRowsHTML(){
   const rows=DATA.filter(p=>(filterGen==="all"||(p.domain||"経営")===filterGen))
     .filter(p=>filterStatus==="all"||p.status===filterStatus)
     .filter(p=>!q||(p.name+p.company+p.sector+p.role).includes(q))
     .sort((a,b)=>a.since-b.since);
-  app.innerHTML='<section class="view"><div class="hd"><span class="tag">INDEX</span><h2>名鑑</h2></div>'+
-   '<input class="search" id="q" placeholder="名前・会社・領域で検索" value="'+esc(q)+'">'+
-   '<div class="filters">'+doms.map(g=>'<button data-g="'+g+'" class="'+(filterGen===g?"on":"")+'">'+(g==="all"?"ALL":g)+'</button>').join("")+
-   '<button data-s="filled" class="'+(filterStatus==="filled"?"on":"")+'">収録済のみ</button></div>'+
-   rows.map(p=>'<button class="row '+(p.status==="stub"?"stub":"")+'" data-id="'+p.id+'"><div class="l1"><span class="nm">'+esc(p.name)+
+  return rows.map(p=>'<button class="row '+(p.status==="stub"?"stub":"")+'" data-id="'+p.id+'"><div class="l1"><span class="nm">'+esc(p.name)+
      (p.status==="stub"?'<span class="badge">未収録</span>':'')+'</span><span class="yrs">'+(NOW-p.since)+'年目</span></div>'+
      '<div class="l2">'+esc(p.domain||"経営")+' ／ '+esc(p.role)+'</div>'+
-     (p.thesis?'<div class="th">'+esc(p.thesis.slice(0,58))+'…</div>':'')+'</button>').join("")+
+     (p.thesis?'<div class="th">'+esc(p.thesis.slice(0,58))+'…</div>':'')+'</button>').join("");
+}
+function bindRows(sel){ document.querySelectorAll(sel).forEach(r=>r.addEventListener("click",()=>go(r.dataset.id))); }
+function renderList(){
+  const doms=["all",...new Set(DATA.map(p=>p.domain||"経営"))];
+  app.innerHTML='<section class="view"><div class="hd"><span class="tag">INDEX</span><h2>名鑑</h2></div>'+
+   '<input class="search" id="q" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="名前・会社・領域で検索" value="'+esc(q)+'">'+
+   '<div class="filters">'+doms.map(g=>'<button data-g="'+g+'" class="'+(filterGen===g?"on":"")+'">'+(g==="all"?"ALL":g)+'</button>').join("")+
+   '<button data-s="filled" class="'+(filterStatus==="filled"?"on":"")+'">収録済のみ</button></div>'+
+   '<div id="rows">'+listRowsHTML()+'</div>'+
    '</section>';
-  $("#q").addEventListener("input",e=>{q=e.target.value;const s=e.target.selectionStart;renderList();const el=$("#q");el.focus();el.setSelectionRange(s,s);});
+  const el=$("#q"); let composing=false;
+  const upd=()=>{ q=el.value; $("#rows").innerHTML=listRowsHTML(); bindRows("#rows .row"); };
+  el.addEventListener("compositionstart",()=>{composing=true;});
+  el.addEventListener("compositionend",()=>{composing=false;upd();});
+  el.addEventListener("input",()=>{ if(!composing) upd(); });
   document.querySelectorAll("[data-g]").forEach(b=>b.addEventListener("click",()=>{filterGen=b.dataset.g;renderList()}));
   document.querySelectorAll("[data-s]").forEach(b=>b.addEventListener("click",()=>{filterStatus=filterStatus==="filled"?"all":"filled";renderList()}));
-  document.querySelectorAll(".row").forEach(r=>r.addEventListener("click",()=>go(r.dataset.id)));
+  bindRows("#rows .row");
 }
 
-
-/* ===== 横断検索 ===== */
-const PRESETS=["承継","撤退","公開","採用","育成","数値","数字","負け","失敗","時間","制度","任せ","現場","批判","反対","記録","情報"];
-let cq="";
-function collectUnits(){
-  const out=[];
-  filled.forEach(p=>{
-    p.rules.forEach((r,i)=>out.push({p,kind:"判断ルール R"+(i+1),title:r.h,body:r.s+" ／ "+r.u}));
-    p.fail.items.forEach(f=>out.push({p,kind:"失敗手順 "+p.fail.t,title:f.b,body:f.s}));
-    p.prompts.forEach(q=>out.push({p,kind:"問い ／ "+q[0],title:q[1],body:""}));
-    out.push({p,kind:"中核テーゼ",title:p.thesis,body:""});
-  });
-  return out;
-}
-function hl(t,q){ if(!q) return esc(t); const i=t.indexOf(q); if(i<0) return esc(t);
-  return esc(t.slice(0,i))+"<mark>"+esc(t.slice(i,i+q.length))+"</mark>"+esc(t.slice(i+q.length)); }
-function renderCross(){
+function crossHitsHTML(){
   const units=collectUnits();
   const hits=cq?units.filter(u=>(u.title+u.body+u.kind).includes(cq)):[];
-  app.innerHTML='<section class="view"><div class="hd"><span class="tag">CROSS</span><h2>横断検索</h2></div>'+
-   '<p class="lead">55人分の判断ルール・失敗手順・問いを、テーマで串刺しします。同じ主題に対する複数人の答えを並べて読むための画面です。</p>'+
-   '<input class="search" id="cq" placeholder="テーマを入力（例：事業承継）" value="'+esc(cq)+'">'+
-   '<div class="chips">'+PRESETS.map(k=>'<button data-k="'+k+'" class="'+(cq===k?"on":"")+'">'+k+'</button>').join("")+'</div>'+
-   (cq?'<div class="cnt">'+hits.length+' 件 ／ '+new Set(hits.map(h=>h.p.id)).size+' 人</div>':'')+
+  if(!cq) return "";
+  if(!hits.length) return '<div class="stubnote">該当なし。別の言葉で試してください。</div>';
+  return '<div class="cnt">'+hits.length+' 件 ／ '+new Set(hits.map(h=>h.p.id)).size+' 人</div>'+
    hits.map(h=>'<div class="hit" data-id="'+h.p.id+'" style="border-left-color:'+(h.p.accent||"#333")+'">'+
      '<div class="who"><b>'+esc(h.p.name)+'</b><span>'+esc(h.kind)+'</span></div>'+
      '<div class="ttl">'+hl(h.title,cq)+'</div>'+
-     (h.body?'<div class="bdy">'+hl(h.body,cq)+'</div>':'')+'</div>').join("")+
-   (cq&&!hits.length?'<div class="stubnote">該当なし。別の言葉で試してください。</div>':'')+
+     (h.body?'<div class="bdy">'+hl(h.body,cq)+'</div>':'')+'</div>').join("");
+}
+function bindHits(){ document.querySelectorAll("#hits .hit").forEach(h=>h.addEventListener("click",()=>go(h.dataset.id))); }
+function renderCross(){
+  app.innerHTML='<section class="view"><div class="hd"><span class="tag">CROSS</span><h2>横断検索</h2></div>'+
+   '<p class="lead">65人分の判断ルール・失敗手順・問いを、テーマで串刺しします。同じ主題に対する複数人の答えを並べて読むための画面です。</p>'+
+   '<input class="search" id="cq" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="テーマを入力（例：承継）" value="'+esc(cq)+'">'+
+   '<div class="chips" id="cchips">'+PRESETS.map(k=>'<button data-k="'+k+'" class="'+(cq===k?"on":"")+'">'+k+'</button>').join("")+'</div>'+
+   '<div id="hits">'+crossHitsHTML()+'</div>'+
    '</section>';
-  const el=$("#cq");
-  el.addEventListener("input",e=>{cq=e.target.value;const c=e.target.selectionStart;renderCross();const n=$("#cq");n.focus();n.setSelectionRange(c,c);});
-  document.querySelectorAll(".chips button").forEach(b=>b.addEventListener("click",()=>{cq=(cq===b.dataset.k)?"":b.dataset.k;renderCross();}));
-  document.querySelectorAll(".hit").forEach(h=>h.addEventListener("click",()=>go(h.dataset.id)));
+  const el=$("#cq"); let composing=false;
+  const upd=()=>{ cq=el.value; $("#hits").innerHTML=crossHitsHTML(); bindHits();
+    document.querySelectorAll("#cchips button").forEach(b=>b.classList.toggle("on", b.dataset.k===cq)); };
+  el.addEventListener("compositionstart",()=>{composing=true;});
+  el.addEventListener("compositionend",()=>{composing=false;upd();});
+  el.addEventListener("input",()=>{ if(!composing) upd(); });
+  document.querySelectorAll("#cchips button").forEach(b=>b.addEventListener("click",()=>{
+    cq=(cq===b.dataset.k)?"":b.dataset.k; el.value=cq; upd(); }));
+  bindHits();
 }
 
 /* ===== ★自分向け ===== */
@@ -3145,9 +3147,9 @@ async function renderRecord(){
   '<div class="sec2"><span>SYNC</span>スプレッドシート同期</div>'+
   '<p class="lead" style="margin-top:10px">GASのウェブアプリURLとユーザー名を入れると、この端末の記録がスプレッドシートに蓄積されます。別の端末で同じ設定を入れれば、記録が引き継がれます。</p>'+
   '<div class="sync"><label>GAS ウェブアプリ URL（/exec で終わるもの）</label>'+
-  '<input id="syncurl" placeholder="https://script.google.com/macros/s/.../exec" value="'+esc(SYNC.url)+'">'+
+  '<input id="syncurl" type="url" inputmode="url" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="https://script.google.com/macros/s/.../exec" value="'+esc(SYNC.url)+'">'+
   '<label>ユーザー名（推測されにくい文字列を推奨）</label>'+
-  '<input id="syncuser" placeholder="nori-2026" value="'+esc(SYNC.user)+'">'+
+  '<input id="syncuser" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="nori-2026" value="'+esc(SYNC.user)+'">'+
   '<div class="btns"><button id="dosync">今すぐ同期</button><button class="ghost" id="savesync">設定だけ保存</button></div>'+
   '<div class="st" id="syncst">'+(SYNC.url?"設定済み。変更するとローカルに保存されます。":"未設定。ローカル保存のみで動作しています。")+'</div></div>'+
   '<div class="sec2"><span>EXPORT</span>書き出し</div>'+
